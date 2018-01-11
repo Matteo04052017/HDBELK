@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Session Name="/home/osboxes/Documents/TestElk/TestElk.workspace">
+  <int Value="9" Name="m_selectedTab"/>
+  <wxString Value="/home/osboxes/Documents/TestElk/TestElk.workspace" Name="m_workspaceName"/>
+  <TabInfoArray Name="TabInfoArray">
+    <TabInfo>
+      <wxString Value="/home/osboxes/tango-dev/HDB++/libhdbpp-cassandra/src/AttributeName.cpp" Name="FileName"/>
+      <int Value="21" Name="FirstVisibleLine"/>
+      <int Value="38" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/osboxes/tango-dev/HDB++/libhdbpp-cassandra/src/AttributeName.h" Name="FileName"/>
+      <int Value="48" Name="FirstVisibleLine"/>
+      <int Value="66" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/osboxes/tango-dev/HDB++/libhdbpp-cassandra/src/LibHdb++Cassandra.cpp" Name="FileName"/>
+      <int Value="188" Name="FirstVisibleLine"/>
+      <int Value="240" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/osboxes/tango-dev/HDB++/libhdbpp-elk/src/LibHdb++ELK.cpp" Name="FileName"/>
+      <int Value="352" Name="FirstVisibleLine"/>
+      <int Value="332" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/osboxes/tango-dev/HDB++/libhdbpp-elk/src/LibHdb++ELK.h" Name="FileName"/>
+      <int Value="66" Name="FirstVisibleLine"/>
+      <int Value="78" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/osboxes/tango-dev/HDB++/libhdbpp-elk/src/LibHdb++Defines.h" Name="FileName"/>
+      <int Value="31" Name="FirstVisibleLine"/>
+      <int Value="47" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/osboxes/tango-dev/HDB++/libhdbpp-elk/src/CMakeLists.txt" Name="FileName"/>
+      <int Value="0" Name="FirstVisibleLine"/>
+      <int Value="6" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/osboxes/tango-dev/HDB++/libhdbpp-elk/doxygen-config" Name="FileName"/>
+      <int Value="0" Name="FirstVisibleLine"/>
+      <int Value="0" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/osboxes/tango-dev/HDB++/libhdbpp-elk/CMakeLists.txt" Name="FileName"/>
+      <int Value="111" Name="FirstVisibleLine"/>
+      <int Value="117" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/osboxes/Documents/TestElk/TestElk/main.cpp" Name="FileName"/>
+      <int Value="357" Name="FirstVisibleLine"/>
+      <int Value="335" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/usr/include/c++/4.9/bits/ios_base.h" Name="FileName"/>
+      <int Value="122" Name="FirstVisibleLine"/>
+      <int Value="123" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/osboxes/Documents/TestElk/TestElk/json/json.hpp" Name="FileName"/>
+      <int Value="9837" Name="FirstVisibleLine"/>
+      <int Value="9855" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/osboxes/tango-dev/HDB++/libhdbpp-elk/src/DAL.cpp" Name="FileName"/>
+      <int Value="129" Name="FirstVisibleLine"/>
+      <int Value="153" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+  </TabInfoArray>
+  <SerializedObject Name="m_breakpoints">
+    <long Value="3" Name="Count"/>
+    <SerializedObject Name="Breakpoint0">
+      <wxString Value="/home/osboxes/Documents/TestElk/TestElk/main.cpp" Name="file"/>
+      <int Value="311" Name="lineno"/>
+      <wxString Value="" Name="function_name"/>
+      <wxString Value="" Name="memory_address"/>
+      <int Value="1" Name="bp_type"/>
+      <int Value="0" Name="watchpoint_type"/>
+      <wxString Value="" Name="watchpt_data"/>
+      <CData Name="commandlist"/>
+      <bool Value="0" Name="regex"/>
+      <bool Value="0" Name="is_temp"/>
+      <bool Value="1" Name="is_enabled"/>
+      <int Value="0" Name="ignore_number"/>
+      <wxString Value="" Name="conditions"/>
+      <int Value="0" Name="origin"/>
+    </SerializedObject>
+    <SerializedObject Name="Breakpoint1">
+      <wxString Value="/home/osboxes/Documents/TestElk/TestElk/main.cpp" Name="file"/>
+      <int Value="433" Name="lineno"/>
+      <wxString Value="" Name="function_name"/>
+      <wxString Value="" Name="memory_address"/>
+      <int Value="1" Name="bp_type"/>
+      <int Value="0" Name="watchpoint_type"/>
+      <wxString Value="" Name="watchpt_data"/>
+      <CData Name="commandlist"/>
+      <bool Value="0" Name="regex"/>
+      <bool Value="0" Name="is_temp"/>
+      <bool Value="1" Name="is_enabled"/>
+      <int Value="0" Name="ignore_number"/>
+      <wxString Value="" Name="conditions"/>
+      <int Value="0" Name="origin"/>
+    </SerializedObject>
+    <SerializedObject Name="Breakpoint2">
+      <wxString Value="/home/osboxes/Documents/TestElk/TestElk/main.cpp" Name="file"/>
+      <int Value="458" Name="lineno"/>
+      <wxString Value="" Name="function_name"/>
+      <wxString Value="" Name="memory_address"/>
+      <int Value="1" Name="bp_type"/>
+      <int Value="0" Name="watchpoint_type"/>
+      <wxString Value="" Name="watchpt_data"/>
+      <CData Name="commandlist"/>
+      <bool Value="0" Name="regex"/>
+      <bool Value="0" Name="is_temp"/>
+      <bool Value="1" Name="is_enabled"/>
+      <int Value="0" Name="ignore_number"/>
+      <wxString Value="" Name="conditions"/>
+      <int Value="0" Name="origin"/>
+    </SerializedObject>
+  </SerializedObject>
+</Session>
