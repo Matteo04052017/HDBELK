@@ -11,6 +11,21 @@ DAL::~DAL()
 {
 }
 
+void DAL::SetElkHttpRepo(const string& elk_http_repo)
+{
+    this->elk_http_repo = elk_http_repo;
+}
+
+const string& DAL::GetElkHttpRepo() const
+{
+    return elk_http_repo;
+}
+
+const json& DAL::GetErrors() const
+{
+    return errors;
+}
+
 bool DAL::InsertElastic(string index, string type, string in_json, string& out_id)
 {
     std::stringstream qurl;
@@ -28,6 +43,8 @@ bool DAL::InsertElastic(string index, string type, string in_json, string& out_i
         found = true;
         auto res = json::parse(r.body);
         out_id = res["_id"];
+    } else {
+        errors += { r.code, r.body };
     }
 
     RestClient::disable();
@@ -56,6 +73,9 @@ bool DAL::UpdateElastic(string index, string type, string id, string update_json
     bool found = false;
     if (r.code == HTTP_STATUS_OK)
         found = true;
+    else {
+        errors += { r.code, r.body };
+    }
 
     RestClient::disable();
     return found;
@@ -80,6 +100,8 @@ bool DAL::SearchElastic(string index, string type, string json_search, json& out
         out_json = json::parse(r.body);
         if (out_json["hits"]["total"] > 0)
             found = true;
+    } else {
+        errors += { r.code, r.body };
     }
 
     return found;
@@ -101,6 +123,8 @@ bool DAL::GetElasticById(string index, string type, string id, json& out_json)
     if (r.code == HTTP_STATUS_OK) {
         found = true;
         out_json = json::parse(r.body);
+    } else {
+        errors += { r.code, r.body };
     }
 
     return found;
@@ -124,7 +148,7 @@ bool DAL::GetAttributeConfiguration(AttributeConfiguration& p_attr_conf)
     }
     catch (int e)
     {
-        LOG(Debug) << e << endl;
+        LOG(Debug) << "Ex#" << e << "::" << errors.dump() << endl;
         return false;
     }
 }
@@ -149,7 +173,7 @@ bool DAL::SaveAttributeConfiguration(AttributeConfiguration& p_attr_conf)
     }
     catch (int e)
     {
-        LOG(Debug) << e << endl;
+        LOG(Debug) << "Ex#" << e << "::" << errors.dump() << endl;
         return false;
     }
 }
@@ -171,7 +195,7 @@ bool DAL::GetAttributeConfigurationHistory(AttributeConfigurationHistory& p_attr
     }
     catch (int e)
     {
-        LOG(Debug) << e << endl;
+        LOG(Debug) << "Ex#" << e << "::" << errors.dump() << endl;
         return false;
     }
 }
@@ -198,7 +222,54 @@ bool DAL::SaveAttributeConfigurationHistory(AttributeConfigurationHistory& p_att
     }
     catch (int e)
     {
-        LOG(Debug) << e << endl;
+        LOG(Debug) << "Ex#" << e << "::" << errors.dump() << endl;
+        return false;
+    }
+}
+
+bool DAL::SaveAttributeParameter(AttributeParameter& p_attr_param)
+{
+    try
+    {
+        json res;
+        if (!p_attr_param.GetID().empty()) {
+            LOG(Debug) << "Updating attribute parameter: \n" << res << endl;
+            return UpdateElastic("configuration", "attribute", p_attr_param.GetID(), p_attr_param.ToElkScript4Update());
+        }
+
+        string out_id;
+        if (!InsertElastic("configuration", "attribute", p_attr_param.ToJson(), out_id))
+            return false;
+        LOG(Debug) << "Inserted attribute parameter: " << out_id << endl;
+        p_attr_param.SetID(out_id);
+        return true;
+    }
+    catch (int e)
+    {
+        LOG(Debug) << "Ex#" << e << "::" << errors.dump() << endl;
+        return false;
+    }
+}
+
+bool DAL::SaveAttributeEventData(AttributeEventData& p_attr_event_data)
+{
+    try
+    {
+        json res;
+        if (!p_attr_event_data.GetID().empty()) {
+            throw string("The data object 'AttributeEventData' should not be updated in the DB");
+        }
+
+        string out_id;
+        if (!InsertElastic("configuration", "attribute", p_attr_event_data.ToJson(), out_id))
+            return false;
+        LOG(Debug) << "Inserted AttributeEventData: " << out_id << endl;
+        p_attr_event_data.SetID(out_id);
+        return true;
+    }
+    catch (int e)
+    {
+        LOG(Debug) << "Ex#" << e << "::" << errors.dump() << endl;
         return false;
     }
 }

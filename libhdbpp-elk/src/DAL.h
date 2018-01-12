@@ -23,6 +23,7 @@ class DAL
 {
 private:
     string elk_http_repo;
+    json errors;
 
     bool InsertElastic(string index, string type, string in_json, string& out_id);
 
@@ -33,14 +34,23 @@ private:
     bool GetElasticById(string index, string type, string id, json& out_json);
 
 public:
+    void SetElkHttpRepo(const string& elk_http_repo);
+    // void SetErrors(const json& errors);
+    const string& GetElkHttpRepo() const;
+    const json& GetErrors() const;
+
     bool GetAttributeConfiguration(AttributeConfiguration& p_attr_conf);
 
     bool SaveAttributeConfiguration(AttributeConfiguration& p_attr_conf);
-    
+
     bool GetAttributeConfigurationHistory(AttributeConfigurationHistory& p_attr_conf_history);
 
     bool SaveAttributeConfigurationHistory(AttributeConfigurationHistory& p_attr_conf_history);
-    
+
+    bool SaveAttributeParameter(AttributeParameter& p_attr_param);
+
+    bool SaveAttributeEventData(AttributeEventData& p_attr_event_data);
+
     DAL(string pelk_http_repo);
     ~DAL();
 };

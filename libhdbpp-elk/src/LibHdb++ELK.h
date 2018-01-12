@@ -52,14 +52,6 @@ private:
     string elk_http_repo;
     string m_keyspace_name;
 
-   /* bool insertElastic(string index, string type, json in_json, string out_id);
-
-    bool updateElastic(string index, string type, string id, string update_json_doc);
-
-    bool searchElastic(string index, string type, string query, json out_json);
-
-    bool searchElasticByJson(string index, string type, json json_search, json out_json);*/
-
     string get_data_type(int type /*DEV_DOUBLE, DEV_STRING, ..*/,
                          int format /*SCALAR, SPECTRUM, ..*/,
                          int write_type /*READ, READ_WRITE, ..*/) const;
@@ -73,12 +65,7 @@ private:
 public:
     ~HdbPPELK();
     HdbPPELK(vector<string> configuration);
-    bool find_attr_id(AttributeName& attr_name, string ID);
-
-    bool find_attr_id_and_ttl(AttributeName& attr_name, string ID, unsigned int& ttl);
-
-    FindAttrResult
-    find_attr_id_type_and_ttl(AttributeName& attr_name, string ID, string attr_type, unsigned int& conf_ttl);
+    
     /**
      * @brief Insert an attribute archive event into the database
      *

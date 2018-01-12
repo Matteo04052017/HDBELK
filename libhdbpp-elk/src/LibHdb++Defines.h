@@ -162,9 +162,10 @@ const std::string PARAM_COL_DESCRIPTION = "description";
 
 // Exception types found in the code
 const std::string EXCEPTION_TYPE_CONFIG = "LibHDB++ Configuration Error";
-const std::string EXCEPTION_TYPE_CONNECTION = "Cassandra Connection Error";
-const std::string EXCEPTION_TYPE_QUERY = "Cassandra Query Error";
+const std::string EXCEPTION_TYPE_CONNECTION = "ELK Connection Error";
+const std::string EXCEPTION_TYPE_QUERY = "ELK Query Error";
 const std::string EXCEPTION_TYPE_EXTRACT = "Attribute Extraction Error";
+const std::string EXCEPTION_TYPE_SAVEEVENTDATA = "Attribute Extraction Error";
 const std::string EXCEPTION_TYPE_UNSUPPORTED_ATTR = "Unsupported Attribute Type";
 const std::string EXCEPTION_TYPE_MISSING_ATTR = "Missing Attribute";
 const std::string EXCEPTION_TYPE_NULL_POINTER = "Null Pointer Error";

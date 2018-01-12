@@ -84,16 +84,6 @@ HdbPPELK::HdbPPELK(vector<string> configuration)
         LOG(Error) << error_desc.str() << endl;
         Tango::Except::throw_exception(EXCEPTION_TYPE_CONFIG, error_desc.str(), __func__);
     }
-
-    /*try
-    {
-        local_dc = libhdb_conf.at("local_dc");
-    }
-    catch (const std::out_of_range &e)
-    {
-        LOG(Debug) << "Library configuration parameter \"local_dc\" is not defined. Default value DC1 will be used."
-                   << endl;
-    }*/
 }
 
 HdbPPELK::~HdbPPELK()
@@ -108,7 +98,7 @@ void HdbPPELK::insert_param_Attr(Tango::AttrConfEventData* data, HdbEventDataTyp
     TRACE_ENTER;
     LOG(Warning) << "insert_param_Attr";
 
-    /*if (data == NULL) {
+    if (data == NULL) {
         stringstream error_desc;
         error_desc << "Unexpected null Tango::AttrConfEventData" << ends;
         LOG(Error) << error_desc.str() << endl;
@@ -123,12 +113,13 @@ void HdbPPELK::insert_param_Attr(Tango::AttrConfEventData* data, HdbEventDataTyp
     }
 
     AttributeName attr_name(data->attr_name);
+    AttributeConfiguration attr_conf(attr_name);
+    DAL d(elk_http_repo);
+
     int64_t ev_time = ((int64_t)data->get_date().tv_sec) * 1000;
     int ev_time_us = data->get_date().tv_usec;
 
-    string uuid;
-
-    if (!find_attr_id(attr_name, uuid)) {
+    if (!d.GetAttributeConfiguration(attr_conf)) {
         LOG(Error) << "Could not find ID for attribute " << attr_name << endl;
         stringstream error_desc;
         error_desc << "ERROR Could not find ID for attribute  \"" << attr_name << "\": " << ends;
@@ -156,31 +147,31 @@ void HdbPPELK::insert_param_Attr(Tango::AttrConfEventData* data, HdbEventDataTyp
     int64_t insert_time = ((int64_t)ts.tv_sec) * 1000;
     int insert_time_us = ts.tv_nsec / 1000;
 
-    // build the json object to store in type PARAM_TABLE_NAME
-    json to_store = { { PARAM_COL_ID, uuid },
-                      { PARAM_COL_EV_TIME, ev_time },
-                      { PARAM_COL_EV_TIME_US, ev_time_us },
-                      { PARAM_COL_INS_TIME, insert_time },
-                      { PARAM_COL_INS_TIME_US, insert_time_us },
-                      { PARAM_COL_LABEL, data->attr_conf->label.c_str() },
-                      { PARAM_COL_UNIT, data->attr_conf->unit.c_str() },
-                      { PARAM_COL_STANDARDUNIT, data->attr_conf->standard_unit.c_str() },
-                      { PARAM_COL_DISPLAYUNIT, data->attr_conf->display_unit.c_str() },
-                      { PARAM_COL_FORMAT, data->attr_conf->format.c_str() },
-                      { PARAM_COL_ARCHIVERELCHANGE, data->attr_conf->events.arch_event.archive_rel_change.c_str() },
-                      { PARAM_COL_ARCHIVEABSCHANGE, data->attr_conf->events.arch_event.archive_abs_change.c_str() },
-                      { PARAM_COL_ARCHIVEPERIOD, data->attr_conf->events.arch_event.archive_period.c_str() },
-                      { PARAM_COL_DESCRIPTION, data->attr_conf->description.c_str() }, };
+    AttributeParameter attr_param(attr_conf.GetID(),
+                                  ev_time,
+                                  ev_time_us,
+                                  insert_time,
+                                  insert_time_us,
+                                  data->attr_conf->label.c_str(),
+                                  data->attr_conf->unit.c_str(),
+                                  data->attr_conf->standard_unit.c_str(),
+                                  data->attr_conf->display_unit.c_str(),
+                                  data->attr_conf->format.c_str(),
+                                  data->attr_conf->events.arch_event.archive_rel_change.c_str(),
+                                  data->attr_conf->events.arch_event.archive_abs_change.c_str(),
+                                  data->attr_conf->events.arch_event.archive_period.c_str(),
+                                  data->attr_conf->description.c_str());
 
-    string out_id;
-    insertElastic(attr_name.tango_host_with_domain().c_str(), PARAM_TABLE_NAME, to_store, out_id);*/
+    d.SaveAttributeParameter(attr_param);
+
+    TRACE_EXIT;
 }
 
 void HdbPPELK::insert_Attr(Tango::EventData* data, HdbEventDataType ev_data_type)
 {
     TRACE_ENTER;
 
-    /*if (data == NULL) {
+    if (data == NULL) {
         stringstream error_desc;
         error_desc << "Unexpected null Tango::EventData" << ends;
         LOG(Error) << error_desc.str() << endl;
@@ -188,6 +179,8 @@ void HdbPPELK::insert_Attr(Tango::EventData* data, HdbEventDataType ev_data_type
     }
 
     AttributeName attr_name(data->attr_name);
+    AttributeConfiguration attr_conf(attr_name);
+    DAL d(elk_http_repo);
 
     int64_t ev_time;
     int ev_time_us;
@@ -239,10 +232,7 @@ void HdbPPELK::insert_Attr(Tango::EventData* data, HdbEventDataType ev_data_type
         ev_time_us = rcv_time_us;
     }
 
-    string id;
-    unsigned int ttl = 0;
-
-    if (find_attr_id_and_ttl(attr_name, id, ttl)) {
+    if (!d.GetAttributeConfiguration(attr_conf)) {
         LOG(Error) << "Could not find ID for attribute " << attr_name << endl;
         stringstream error_desc;
         error_desc << "ERROR Could not find ID for attribute  \"" << attr_name << "\": " << ends;
@@ -267,32 +257,34 @@ void HdbPPELK::insert_Attr(Tango::EventData* data, HdbEventDataType ev_data_type
     int64_t insert_time = ((int64_t)ts.tv_sec) * 1000;
     int insert_time_us = ts.tv_nsec / 1000;
 
-    json to_store = { { SC_COL_ID, id },
-                      { SC_COL_PERIOD, period },
-                      { SC_COL_EV_TIME, ev_time },
-                      { SC_COL_EV_TIME_US, ev_time_us },
-                      { SC_COL_RCV_TIME, rcv_time },
-                      { SC_COL_RCV_TIME_US, rcv_time_us },
-                      { SC_COL_INS_TIME, insert_time },
-                      { SC_COL_INS_TIME_US, insert_time_us },
-                      { SC_COL_QUALITY, quality },
-                      { SC_COL_ERROR_DESC, error_desc.c_str() } };
+    json nulljson = {};
+    AttributeEventData attr_event_data(attr_conf.GetID(),
+                                       period,
+                                       ev_time,
+                                       ev_time_us,
+                                       rcv_time,
+                                       rcv_time_us,
+                                       insert_time,
+                                       insert_time_us,
+                                       quality,
+                                       error_desc.c_str(),
+                                       nulljson,
+                                       nulljson,
+                                       attr_conf.GetTtl());
 
     if (write_type != Tango::WRITE) // RO or RW
-    {
-        to_store += { SC_COL_VALUE_R, extract_read(data, data_type) };
-    }
+        attr_event_data.SetValueR(extract_read(data, data_type));
+
     if (write_type != Tango::READ) // RW or WO
-    {
-        to_store += { SC_COL_VALUE_W, extract_set(data, data_type) };
+        attr_event_data.SetValueW(extract_set(data, data_type));
+
+    if (!d.SaveAttributeEventData(attr_event_data)) {
+        stringstream error_desc;
+        LOG(Error) << error_desc << "SaveAttributeEventData ERROR! Json:\n" << attr_event_data.ToJson() << endl;
+        Tango::Except::throw_exception(EXCEPTION_TYPE_SAVEEVENTDATA, error_desc.str().c_str(), __func__);
     }
-    if (ttl != 0)
-        to_store += { "_ttl", { "enabled", true, "default", (ttl * 3600) + "ms" } };
 
-    string out_id;
-    insertElastic(attr_name.tango_host_with_domain().c_str(), PARAM_TABLE_NAME, to_store, out_id);
-
-    TRACE_EXIT;*/
+    TRACE_EXIT;
 }
 
 void HdbPPELK::configure_Attr(string name, int type, int format, int write_type, unsigned int ttl)
@@ -339,7 +331,7 @@ void HdbPPELK::configure_Attr(string name, int type, int format, int write_type,
         TRACE_EXIT;
         return;
     }
-    
+
     // if (already_configured) {
     if (attr_conf.GetDataType().compare(data_type) != 0) {
         stringstream error_desc;
@@ -358,14 +350,14 @@ void HdbPPELK::configure_Attr(string name, int type, int format, int write_type,
     if (attr_conf.GetTtl() != ttl) {
         LOG(Debug) << ".... BUT different ttl: updating " << attr_conf.GetTtl() << " to " << ttl << endl;
         attr_conf.SetTtl(ttl);
-        LOG(Error) << "Save Attribute Configuration " << attr_conf.ToJson() << endl;
+        LOG(Debug) << "Save Attribute Configuration " << attr_conf.ToJson() << endl;
         d.SaveAttributeConfiguration(attr_conf);
     }
 
     AttributeConfigurationHistory attr_conf_history(attr_conf);
     if (d.GetAttributeConfigurationHistory(attr_conf_history)) {
         if (attr_conf_history.GetEventType().compare(EVENT_REMOVE) == 0) {
-            LOG(Error) << "Save Attribute Configuration History" << attr_conf_history.ToJson() << endl;
+            LOG(Debug) << "Save Attribute Configuration History" << attr_conf_history.ToJson() << endl;
             d.SaveAttributeConfigurationHistory(attr_conf_history);
         }
     }
@@ -375,39 +367,42 @@ void HdbPPELK::configure_Attr(string name, int type, int format, int write_type,
 
 void HdbPPELK::updateTTL_Attr(string fqdn_attr_name, unsigned int ttl)
 {
-    /*TRACE_ENTER;
+    TRACE_ENTER;
 
     AttributeName attr_name(fqdn_attr_name);
-    string id;
+    AttributeConfiguration attr_conf(attr_name);
+    DAL d(elk_http_repo);
+    bool already_configured = d.GetAttributeConfiguration(attr_conf);
 
-    if (!find_attr_id(attr_name, id)) {
+    if (!already_configured) {
         stringstream error_desc;
         error_desc << "ERROR Attribute " << attr_name << " NOT FOUND in HDB++ configuration table" << ends;
         LOG(Error) << error_desc.str() << endl;
         Tango::Except::throw_exception(EXCEPTION_TYPE_MISSING_ATTR, error_desc.str(), __func__);
     }
+    attr_conf.SetTtl(ttl);
+    d.SaveAttributeConfiguration(attr_conf);
 
-    json attr_conf_update = { CONF_COL_TTL, ttl };
-    updateElastic(m_keyspace_name, CONF_TABLE_NAME, id, attr_conf_update);
-    TRACE_EXIT;*/
+    TRACE_EXIT;
 }
 
 void HdbPPELK::event_Attr(string fqdn_attr_name, unsigned char event)
 {
-    /*TRACE_ENTER;
+    TRACE_ENTER;
 
     struct timespec ts;
-    if (clock_gettime(CLOCK_REALTIME, &ts) != 0) {
-        // TODO handle this error?
+    if (clock_gettime(CLOCK_REALTIME, &ts) != 0)
         perror("clock_gettime()");
-    }
+
     int64_t current_time = ((int64_t)ts.tv_sec) * 1000;
     int current_time_us = ts.tv_nsec / 1000;
 
     AttributeName attr_name(fqdn_attr_name);
-    string uuid;
+    AttributeConfiguration attr_conf(attr_name);
+    DAL d(elk_http_repo);
+    bool already_configured = d.GetAttributeConfiguration(attr_conf);
 
-    if (!find_attr_id(attr_name, uuid)) {
+    if (!already_configured) {
         stringstream error_desc;
         error_desc << "ERROR Attribute " << attr_name << " NOT FOUND in HDB++ configuration table" << ends;
         LOG(Error) << error_desc.str() << endl;
@@ -415,29 +410,17 @@ void HdbPPELK::event_Attr(string fqdn_attr_name, unsigned char event)
     }
 
     string event_name = "";
+    AttributeConfigurationHistory attr_conf_history(attr_conf, event_name, current_time, current_time_us);
 
     switch (event) {
     case DB_START: {
-        string index = m_keyspace_name;
-        string type = HISTORY_TABLE_NAME;
-        json jsonQuery = { { "size", 1 },
-                           { "query", { "term", { { HISTORY_COL_ID, uuid }, { HISTORY_COL_EVENT, EVENT_REMOVE } } } },
-                           { "sort", { HISTORY_COL_TIME, "desc" } } };
-
-        json out_json;
-        bool ret = false;
-        if (searchElasticByJson(index, type, jsonQuery, out_json))
-            ret = true;
-
-        string last_event = out_json[HISTORY_COL_EVENT];
+        bool ret = d.GetAttributeConfigurationHistory(attr_conf_history);
+        string last_event = attr_conf_history.GetEventType();
         if (ret && last_event == EVENT_START) {
             // It seems there was a crash
-            json history_event = { { HISTORY_COL_ID, uuid },
-                                   { HISTORY_COL_EVENT, EVENT_CRASH },
-                                   { HISTORY_COL_TIME, current_time },
-                                   { HISTORY_COL_TIME_US, current_time_us } };
-            string out_event_id;
-            insertElastic(m_keyspace_name, HISTORY_TABLE_NAME, history_event, out_event_id);
+            AttributeConfigurationHistory attr_conf_history_crash(
+                attr_conf, EVENT_CRASH, current_time, current_time_us);
+            d.SaveAttributeConfigurationHistory(attr_conf_history_crash);
         }
         event_name = EVENT_START;
         break;
@@ -462,14 +445,10 @@ void HdbPPELK::event_Attr(string fqdn_attr_name, unsigned char event)
     }
     }
 
-    json history_event = { { HISTORY_COL_ID, uuid },
-                           { HISTORY_COL_EVENT, event_name },
-                           { HISTORY_COL_TIME, current_time },
-                           { HISTORY_COL_TIME_US, current_time_us } };
-    string out_event_id;
-    insertElastic(m_keyspace_name, HISTORY_TABLE_NAME, history_event, out_event_id);
+    attr_conf_history.SetEventType(event_name);
+    d.SaveAttributeConfigurationHistory(attr_conf_history);
 
-    TRACE_EXIT;*/
+    TRACE_EXIT;
 }
 
 //=============================================================================
@@ -478,113 +457,6 @@ AbstractDB* HdbPPELKFactory::create_db(vector<string> configuration)
 {
     return new HdbPPELK(configuration);
 }
-
-/*bool HdbPPELK::insertElastic(string index, string type, json in_json, string out_id)
-{
-    TRACE_ENTER;
-
-    std::stringstream qurl;
-    qurl << elk_http_repo << "/" << index << "/" << type << "/";
-
-    RestClient::init();
-    RestClient::Connection* conn = new RestClient::Connection(qurl.str());
-    RestClient::HeaderFields headers;
-    headers["Content-Type"] = "application/json";
-    conn->SetHeaders(headers);
-    RestClient::Response r = conn->post("", in_json.dump());
-
-    LOG(Debug) << r.code << "\n"; // HTTP response code
-    LOG(Debug) << r.body << "\n"; // HTTP response body
-
-    bool found = false;
-    if (r.code == HTTP_STATUS_CREATED) {
-        found = true;
-        auto res = json::parse(r.body);
-        out_id = res["_id"];
-    }
-
-    RestClient::disable();
-    TRACE_EXIT;
-    return found;
-}
-
-bool HdbPPELK::updateElastic(string index, string type, string id, string update_json_doc)
-{
-    TRACE_ENTER;
-
-    std::stringstream qurl;
-    qurl << elk_http_repo << "/" << index << "/" << type << "/" << id << "/_update";
-
-    RestClient::init();
-    RestClient::Connection* conn = new RestClient::Connection(qurl.str());
-    RestClient::HeaderFields headers;
-    headers["Content-Type"] = "application/json";
-    conn->SetHeaders(headers);
-
-    json in_json = { { "doc", { update_json_doc } } };
-
-    RestClient::Response r = conn->post("", in_json.dump());
-
-    LOG(Debug) << r.code << "\n"; // HTTP response code
-    LOG(Debug) << r.body << "\n"; // HTTP response body
-
-    bool found = false;
-    if (r.code == HTTP_STATUS_OK)
-        found = true;
-
-    RestClient::disable();
-    TRACE_EXIT;
-    return found;
-}
-
-bool HdbPPELK::searchElastic(string index, string type, string query, json out_json)
-{
-    TRACE_ENTER;
-    LOG(Debug) << "stica";
-    std::stringstream qurl;
-    qurl << elk_http_repo << "/" << index << "/" << type << "/"
-         << "_search?q=" << query;
-
-    LOG(Debug) << "stica==" << qurl.str();
-    RestClient::Response r = RestClient::get(qurl.str());
-
-    LOG(Debug) << r.code << "\n" << r.body << "\n"; // HTTP response
-
-    bool found = false;
-    if (r.code == HTTP_STATUS_OK) {
-        found = true;
-        out_json = json::parse(r.body);
-    }
-
-    TRACE_EXIT;
-    return found;
-}
-
-bool HdbPPELK::searchElasticByJson(string index, string type, json json_search, json out_json)
-{
-    TRACE_ENTER;
-    std::stringstream qurl;
-    qurl << elk_http_repo << "/" << index << "/" << type << "/"
-         << "_search";
-
-    RestClient::init();
-    RestClient::Connection* conn = new RestClient::Connection(qurl.str());
-    RestClient::HeaderFields headers;
-    headers["Content-Type"] = "application/json";
-    conn->SetHeaders(headers);
-    RestClient::Response r = conn->post("", json_search.dump());
-
-    LOG(Debug) << r.code << "\n" << r.body << "\n"; // HTTP response
-
-    bool found = false;
-    if (r.code == HTTP_STATUS_OK) {
-        found = true;
-        out_json = json::parse(r.body);
-    }
-
-    TRACE_EXIT;
-    return found;
-}*/
 
 //=============================================================================
 //=============================================================================
@@ -658,110 +530,6 @@ string HdbPPELK::get_data_type(int type /*DEV_DOUBLE, DEV_STRING, ..*/,
     TRACE_EXIT;
     return data_type.str();
 }
-
-bool HdbPPELK::find_attr_id(AttributeName& attr_name, string ID)
-{
-    TRACE_ENTER;
-
-    // First look into the cache
-    map<string, AttributeParams>::iterator it = attribute_cache.find(attr_name.fully_qualified_attribute_name());
-
-    if (it == attribute_cache.end()) {
-        // if not already present in cache, look for ID in the DB
-        unsigned int ttl = 0;
-        string attr_type;
-        if (!find_attr_id_type_and_ttl(attr_name, ID, attr_type, ttl)) {
-            LOG(Debug) << "ID not found for attr=" << attr_name << endl;
-            TRACE_EXIT;
-            return false;
-        }
-    } else {
-        ID = it->second.id;
-    }
-
-    TRACE_EXIT;
-    return true;
-}
-
-//=============================================================================
-//=============================================================================
-bool HdbPPELK::find_attr_id_and_ttl(AttributeName& attr_name, string ID, unsigned int& ttl)
-{
-    TRACE_ENTER;
-
-    // First look into the cache
-    map<string, AttributeParams>::iterator it = attribute_cache.find(attr_name.fully_qualified_attribute_name());
-
-    if (it == attribute_cache.end()) {
-        // if not already present in cache, look for ID in the DB
-        unsigned int ttl = 0;
-        string attr_type;
-        if (!find_attr_id_type_and_ttl(attr_name, ID, attr_type, ttl)) {
-            LOG(Debug) << "ID not found for attr=" << attr_name << endl;
-            TRACE_EXIT;
-            return false;
-        }
-    } else {
-        ID = it->second.id;
-        ttl = it->second.ttl;
-    }
-
-    TRACE_EXIT;
-    return true;
-}
-
-FindAttrResult
-HdbPPELK::find_attr_id_type_and_ttl(AttributeName& attr_name, string ID, string attr_type, unsigned int& conf_ttl)
-{
-    return AttrNotFound;
-    /*TRACE_ENTER;
-
-    string index = m_keyspace_name;
-    string type = CONF_TABLE_NAME;
-    json out_json;
-    string db_type;
-    json jsonQuery = { { "size", 1 },
-                       { "query", { "term", { CONF_COL_NAME, attr_name.full_attribute_name().c_str() } } } };
-
-    LOG(Debug) << jsonQuery << endl;
-    bool found = false;
-    if (searchElasticByJson(index, type, jsonQuery, out_json)) {
-        try
-        {
-            ID = out_json[CONF_COL_ID];
-            db_type = out_json[CONF_COL_TYPE];
-            conf_ttl = out_json[CONF_COL_TTL].get<int>();
-            attribute_cache.insert(
-                make_pair(attr_name.fully_qualified_attribute_name(), AttributeParams(ID, conf_ttl)));
-            found = true;
-        }
-        catch (json::type_error& e)
-        {
-            LOG(Debug) << "NO RESULT in query: " << jsonQuery << endl;
-            TRACE_EXIT;
-            return AttrNotFound;
-        }
-    }
-
-    if (!found) {
-        LOG(Debug) << "NO RESULT in query: " << jsonQuery << endl;
-        TRACE_EXIT;
-        return AttrNotFound;
-    } else if (db_type != attr_type) {
-        LOG(Debug) << "FOUND ID for " << attr_name.tango_host_with_domain() << "/" << attr_name.full_attribute_name()
-                   << " but different type: attr_type=" << attr_type << "-db_type=" << db_type << endl;
-
-        TRACE_EXIT;
-        return FoundAttrWithDifferentType;
-    }
-
-    LOG(Debug) << "FOUND ID for " << attr_name.tango_host_with_domain() << "/" << attr_name.full_attribute_name()
-               << " with SAME type: attr_type=" << attr_type << "-db_type=" << db_type << endl;
-
-    TRACE_EXIT;
-    return FoundAttrWithSameType;*/
-}
-
 //=============================================================================
 //=============================================================================
 json HdbPPELK::extract_read(Tango::EventData* data, int data_type)
@@ -785,59 +553,70 @@ json HdbPPELK::extract_read(Tango::EventData* data, int data_type)
     case Tango::DEV_BOOLEAN:
         if (data->attr_value->extract_read(vbool)) {
             result = vbool;
+            extract_success = true;
         };
     case Tango::DEV_UCHAR:
         if (data->attr_value->extract_read(vUnsignedChar)) {
             result = (vUnsignedChar);
+            extract_success = true;
         }
     case Tango::DEV_SHORT:
         if (data->attr_value->extract_read(vshort)) {
             result = (vshort);
+            extract_success = true;
         }
         break;
     case Tango::DEV_USHORT:
         if (data->attr_value->extract_read(vUshort)) {
             result = (vUshort);
+            extract_success = true;
         }
         break;
     case Tango::DEV_LONG:
         if (data->attr_value->extract_read(vlong)) {
             result = (vlong);
+            extract_success = true;
         }
         break;
     case Tango::DEV_ULONG:
         if (data->attr_value->extract_read(vUlong)) {
             result = (vUlong);
+            extract_success = true;
         }
         break;
     case Tango::DEV_LONG64:
 
         if (data->attr_value->extract_read(vInt64)) {
             result = (vInt64);
+            extract_success = true;
         }
         break;
     case Tango::DEV_FLOAT:
 
         if (data->attr_value->extract_read(vfloat)) {
             result = (vfloat);
+            extract_success = true;
         }
         break;
     case Tango::DEV_DOUBLE:
 
         if (data->attr_value->extract_read(vdouble)) {
             result = (vdouble);
+            extract_success = true;
         }
         break;
     case Tango::DEV_STRING:
 
         if (data->attr_value->extract_read(vString)) {
             result = (vString);
+            extract_success = true;
         }
         break;
     case Tango::DEV_STATE:
 
         if (data->attr_value->extract_read(vState)) {
             result = (vState);
+            extract_success = true;
         }
         break;
     default: {
@@ -882,60 +661,71 @@ json HdbPPELK::extract_set(Tango::EventData* data, int data_type)
     switch (data_type) {
     case Tango::DEV_BOOLEAN:
         if (data->attr_value->extract_set(vbool)) {
+            extract_success = true;
             result = vbool;
         };
     case Tango::DEV_UCHAR:
         if (data->attr_value->extract_set(vUnsignedChar)) {
             result = (vUnsignedChar);
+            extract_success = true;
         }
     case Tango::DEV_SHORT:
         if (data->attr_value->extract_set(vshort)) {
             result = (vshort);
+            extract_success = true;
         }
         break;
     case Tango::DEV_USHORT:
         if (data->attr_value->extract_set(vUshort)) {
             result = (vUshort);
+            extract_success = true;
         }
         break;
     case Tango::DEV_LONG:
         if (data->attr_value->extract_set(vlong)) {
             result = (vlong);
+            extract_success = true;
         }
         break;
     case Tango::DEV_ULONG:
         if (data->attr_value->extract_set(vUlong)) {
             result = (vUlong);
+            extract_success = true;
         }
         break;
     case Tango::DEV_LONG64:
 
         if (data->attr_value->extract_set(vInt64)) {
             result = (vInt64);
+            extract_success = true;
         }
         break;
     case Tango::DEV_FLOAT:
 
         if (data->attr_value->extract_set(vfloat)) {
             result = (vfloat);
+            extract_success = true;
         }
         break;
     case Tango::DEV_DOUBLE:
 
         if (data->attr_value->extract_set(vdouble)) {
             result = (vdouble);
+            extract_success = true;
         }
         break;
     case Tango::DEV_STRING:
 
         if (data->attr_value->extract_set(vString)) {
             result = (vString);
+            extract_success = true;
         }
         break;
     case Tango::DEV_STATE:
 
         if (data->attr_value->extract_set(vState)) {
             result = (vState);
+            extract_success = true;
         }
         break;
     default: {
@@ -966,36 +756,3 @@ DBFactory* getDBFactory()
     HDBPP::HdbPPELKFactory* db_ELK_factory = new HDBPP::HdbPPELKFactory();
     return static_cast<DBFactory*>(db_ELK_factory);
 }
-
-/*using namespace HDBPP;
-
-int main(int argc, char ** argv)
-{
-    vector<string> lib_config;
-        lib_config.push_back("contact_points=teone");
-        lib_config.push_back("keyspace=osboxes");
-    HdbPPELK myDB = HdbPPELK(lib_config);
-
-        try
-        {
-            string ID;
-                unsigned int ttl_at_start = 0;
-                unsigned int ttl_at_end = 0;
-
-                string fqdn_attr_name = "tango://localhost:10000/sys/tg_test/1/float_scalar";
-
-        AttributeName attr_name(fqdn_attr_name);
-            cout << "attr name = " << fqdn_attr_name << endl;
-            int err = myDB.find_attr_id_and_ttl(attr_name, ID, ttl_at_start);
-
-                cout << "find_attr_id_and_ttl(" << fqdn_attr_name << ") returned " << err << endl;
-
-                cout << "ttl = " << ttl_at_start << endl;
-        }
-        catch(Tango::DevFailed e)
-        {
-                Tango::Except::print_exception(e);
-                return -2;
-        }
-    return 0;
-}*/
