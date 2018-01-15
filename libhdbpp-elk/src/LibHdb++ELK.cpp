@@ -281,7 +281,7 @@ void HdbPPELK::insert_Attr(Tango::EventData* data, HdbEventDataType ev_data_type
 
     if (!_DAL->SaveAttributeEventData(attr_event_data)) {
         stringstream error_desc;
-        LOG(Error) << error_desc << "->SaveAttributeEventData ERROR! Json:\n" << attr_event_data.ToJson() << endl;
+        LOG(Error) << error_desc << "->SaveAttributeEventData ERROR! Json:\n" << _DAL->GetErrors() << endl;
         Tango::Except::throw_exception(EXCEPTION_TYPE_SAVEEVENTDATA, error_desc.str().c_str(), __func__);
     }
 

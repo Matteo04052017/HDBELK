@@ -297,8 +297,8 @@ string HDBPP::AttributeConfigurationHistory::ToElkScript4Update()
     ostringstream json_str;
     json_str << "ctx._source.attribute_configuration_id = '" << attribute_configuration_id << "';"
              << "ctx._source.eventType = '" << eventType << "';"
-             << "ctx._source.time = " << time << ";"
-             << "ctx._source.time_us = " << time_us << ";";
+             << "ctx._source.time = " << time << "L;"
+             << "ctx._source.time_us = " << time_us << "L;";
 
     string result = json_str.str().c_str();
     return result;
