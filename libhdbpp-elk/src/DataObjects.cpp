@@ -154,6 +154,8 @@ string AttributeConfiguration::GetJsonQuery()
              << "\"query\": {"
              << "\"bool\": {"
              << "\"must\": ["
+             << " { \"match\": { \"facility\": \"" << facility << "\" } },"
+             << " { \"match\": { \"port\": " << port << " } },"
              << " { \"match\": { \"domain\": \"" << domain << "\" } },"
              << " { \"match\": { \"family\": \"" << family << "\" } } , "
              << " { \"match\": { \"member\": \"" << member << "\" } },"

@@ -22,24 +22,6 @@ using json = nlohmann::json;
 
 namespace HDBPP
 {
-enum FindAttrResult {
-    AttrNotFound,
-    FoundAttrWithDifferentType,
-    FoundAttrWithSameType
-};
-
-// Parameters for an attribute that can be cached. Mapped to the attribute name
-// in a map below.
-struct AttributeParams
-{
-    AttributeParams(string param_id, unsigned int param_ttl)
-        : id(param_id)
-        , ttl(param_ttl)
-    {
-    }
-    string id;
-    unsigned int ttl;
-};
 
 class HdbPPELK : public AbstractDB
 {
@@ -50,6 +32,7 @@ private:
 
     // ELK web site (no end slash!) i.e. 'http://197.234.23.1:9200' or '197.234.23.1:9200'
     string elk_http_repo;
+    DAL* _DAL;
     string m_keyspace_name;
 
     string get_data_type(int type /*DEV_DOUBLE, DEV_STRING, ..*/,

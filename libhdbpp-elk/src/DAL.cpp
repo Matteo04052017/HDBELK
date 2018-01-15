@@ -134,16 +134,31 @@ bool DAL::GetAttributeConfiguration(AttributeConfiguration& p_attr_conf)
 {
     try
     {
+        map<string, AttributeParams>::iterator it = attribute_cache.find(p_attr_conf.GetJsonQuery());
+
+        if (it != attribute_cache.end()) {
+            LOG(Debug) << "Attribute configuration cache: " << it->second.id << endl;
+            p_attr_conf.SetDataType(it->second.data_type);
+            p_attr_conf.SetTtl(it->second.ttl);
+            p_attr_conf.SetID(it->second.id);
+            return true;
+        }
+
         json res;
         if (!SearchElastic("archiving", "attribute", p_attr_conf.GetJsonQuery(), res))
             return false;
 
-        LOG(Debug) << "Attribute configuration: " << res << endl;
+        LOG(Debug) << "Attribute configuration DB: " << res << endl;
 
         json the_one_we_search = res["hits"]["hits"][0]["_source"];
 
         p_attr_conf.SetParameterFromJson(the_one_we_search);
         p_attr_conf.SetID(res["hits"]["hits"][0]["_id"]);
+
+        attribute_cache.insert(
+            make_pair(p_attr_conf.GetJsonQuery(),
+                      AttributeParams(p_attr_conf.GetID(), p_attr_conf.GetDataType(), p_attr_conf.GetTtl())));
+
         return true;
     }
     catch (int e)
@@ -207,10 +222,8 @@ bool DAL::SaveAttributeConfigurationHistory(AttributeConfigurationHistory& p_att
         json res;
         if (!p_attr_conf_history.GetID().empty()) {
             LOG(Debug) << "Updating attribute configuration history: " << p_attr_conf_history.GetID() << endl;
-            return UpdateElastic("archiving",
-                                 "attribute",
-                                 p_attr_conf_history.GetID(),
-                                 p_attr_conf_history.ToElkScript4Update());
+            return UpdateElastic(
+                "archiving", "attribute", p_attr_conf_history.GetID(), p_attr_conf_history.ToElkScript4Update());
         }
 
         string out_id;

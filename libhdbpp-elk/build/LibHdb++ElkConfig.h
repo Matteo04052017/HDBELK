@@ -4,7 +4,7 @@
 #define VERSION_MAJOR "0"
 #define VERSION_MINOR "10"
 #define VERSION_REVISION "0"
-#define BUILD_TIME "2018-01-11 14:50:55"
+#define BUILD_TIME "2018-01-15 14:00:23"
 
 #endif /* LIBHDPPPELK_CONFIG_H */
 

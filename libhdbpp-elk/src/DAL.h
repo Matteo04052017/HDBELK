@@ -19,11 +19,31 @@ namespace HDBPP
 const int HTTP_STATUS_OK = 200;
 const int HTTP_STATUS_CREATED = 201;
 
+
+// Parameters for an attribute that can be cached. Mapped to the attribute name
+// in a map below.
+struct AttributeParams
+{
+    AttributeParams(string param_id, string param_data_type, unsigned int param_ttl)
+        : id(param_id)
+        , data_type(param_data_type)
+        , ttl(param_ttl)
+    {
+    }
+    string id;
+    string data_type;
+    unsigned int ttl;
+};
+
 class DAL
 {
 private:
     string elk_http_repo;
     json errors;
+    
+    // cache the attribute name to some of its often used data, i.e. ttl and id. This
+    // saves it being looked up in the database everytime we request it
+    map<string, AttributeParams> attribute_cache;
 
     bool InsertElastic(string index, string type, string in_json, string& out_id);
 

@@ -106,6 +106,7 @@ CMakeFiles/object_library.dir/src/DAL.cpp.o: ../src/AttributeName.h
 CMakeFiles/object_library.dir/src/DAL.cpp.o: ../src/DAL.cpp
 CMakeFiles/object_library.dir/src/DAL.cpp.o: ../src/DAL.h
 CMakeFiles/object_library.dir/src/DAL.cpp.o: ../src/DataObjects.h
+CMakeFiles/object_library.dir/src/DAL.cpp.o: ../src/LibHdb++Defines.h
 CMakeFiles/object_library.dir/src/DAL.cpp.o: ../src/Log.h
 CMakeFiles/object_library.dir/src/DAL.cpp.o: ../src/json/json.hpp
 CMakeFiles/object_library.dir/src/DAL.cpp.o: ../src/restclient-cpp/connection.h
@@ -114,6 +115,7 @@ CMakeFiles/object_library.dir/src/DAL.cpp.o: ../src/restclient-cpp/restclient.h
 CMakeFiles/object_library.dir/src/DataObjects.cpp.o: ../src/AttributeName.h
 CMakeFiles/object_library.dir/src/DataObjects.cpp.o: ../src/DataObjects.cpp
 CMakeFiles/object_library.dir/src/DataObjects.cpp.o: ../src/DataObjects.h
+CMakeFiles/object_library.dir/src/DataObjects.cpp.o: ../src/LibHdb++Defines.h
 CMakeFiles/object_library.dir/src/DataObjects.cpp.o: ../src/json/json.hpp
 CMakeFiles/object_library.dir/src/DataObjects.cpp.o: ../src/restclient-cpp/connection.h
 CMakeFiles/object_library.dir/src/DataObjects.cpp.o: ../src/restclient-cpp/restclient.h

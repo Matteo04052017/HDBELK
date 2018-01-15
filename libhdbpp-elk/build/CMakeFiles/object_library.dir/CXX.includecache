@@ -79,6 +79,8 @@ restclient-cpp/restclient.h
 /home/osboxes/tango-dev/HDB++/libhdbpp-elk/src/restclient-cpp/restclient.h
 AttributeName.h
 /home/osboxes/tango-dev/HDB++/libhdbpp-elk/src/AttributeName.h
+LibHdb++Defines.h
+/home/osboxes/tango-dev/HDB++/libhdbpp-elk/src/LibHdb++Defines.h
 
 /home/osboxes/tango-dev/HDB++/libhdbpp-elk/src/LibHdb++Defines.h
 string

@@ -74,6 +74,7 @@ HdbPPELK::HdbPPELK(vector<string> configuration)
     try
     {
         elk_http_repo = libhdb_conf.at("elk_http_repo");
+        _DAL = new DAL(elk_http_repo);
     }
     catch (const std::out_of_range& e)
     {
@@ -89,7 +90,9 @@ HdbPPELK::HdbPPELK(vector<string> configuration)
 HdbPPELK::~HdbPPELK()
 {
     TRACE_ENTER;
-
+    
+    delete(_DAL);
+    
     TRACE_EXIT;
 }
 
@@ -114,12 +117,11 @@ void HdbPPELK::insert_param_Attr(Tango::AttrConfEventData* data, HdbEventDataTyp
 
     AttributeName attr_name(data->attr_name);
     AttributeConfiguration attr_conf(attr_name);
-    DAL d(elk_http_repo);
 
     int64_t ev_time = ((int64_t)data->get_date().tv_sec) * 1000;
     int ev_time_us = data->get_date().tv_usec;
 
-    if (!d.GetAttributeConfiguration(attr_conf)) {
+    if (!_DAL->GetAttributeConfiguration(attr_conf)) {
         LOG(Error) << "Could not find ID for attribute " << attr_name << endl;
         stringstream error_desc;
         error_desc << "ERROR Could not find ID for attribute  \"" << attr_name << "\": " << ends;
@@ -162,7 +164,7 @@ void HdbPPELK::insert_param_Attr(Tango::AttrConfEventData* data, HdbEventDataTyp
                                   data->attr_conf->events.arch_event.archive_period.c_str(),
                                   data->attr_conf->description.c_str());
 
-    d.SaveAttributeParameter(attr_param);
+    _DAL->SaveAttributeParameter(attr_param);
 
     TRACE_EXIT;
 }
@@ -180,7 +182,6 @@ void HdbPPELK::insert_Attr(Tango::EventData* data, HdbEventDataType ev_data_type
 
     AttributeName attr_name(data->attr_name);
     AttributeConfiguration attr_conf(attr_name);
-    DAL d(elk_http_repo);
 
     int64_t ev_time;
     int ev_time_us;
@@ -232,7 +233,7 @@ void HdbPPELK::insert_Attr(Tango::EventData* data, HdbEventDataType ev_data_type
         ev_time_us = rcv_time_us;
     }
 
-    if (!d.GetAttributeConfiguration(attr_conf)) {
+    if (!_DAL->GetAttributeConfiguration(attr_conf)) {
         LOG(Error) << "Could not find ID for attribute " << attr_name << endl;
         stringstream error_desc;
         error_desc << "ERROR Could not find ID for attribute  \"" << attr_name << "\": " << ends;
@@ -278,7 +279,7 @@ void HdbPPELK::insert_Attr(Tango::EventData* data, HdbEventDataType ev_data_type
     if (write_type != Tango::READ) // RW or WO
         attr_event_data.SetValueW(extract_set(data, ev_data_type));
 
-    if (!d.SaveAttributeEventData(attr_event_data)) {
+    if (!_DAL->SaveAttributeEventData(attr_event_data)) {
         stringstream error_desc;
         LOG(Error) << error_desc << "->SaveAttributeEventData ERROR! Json:\n" << attr_event_data.ToJson() << endl;
         Tango::Except::throw_exception(EXCEPTION_TYPE_SAVEEVENTDATA, error_desc.str().c_str(), __func__);
@@ -296,7 +297,6 @@ void HdbPPELK::configure_Attr(string name, int type, int format, int write_type,
                << " attr_name=" << attr_name << endl;
 
     AttributeConfiguration attr_conf(attr_name);
-    DAL d(elk_http_repo);
 
     if (attr_name.validate_domain_family_member_name() != AttributeName::NoError) {
         stringstream error_desc;
@@ -317,16 +317,16 @@ void HdbPPELK::configure_Attr(string name, int type, int format, int write_type,
     int64_t current_time = ((int64_t)ts.tv_sec) * 1000;
     int current_time_us = ts.tv_nsec / 1000;
 
-    bool already_configured = d.GetAttributeConfiguration(attr_conf);
+    bool already_configured = _DAL->GetAttributeConfiguration(attr_conf);
 
     if (!already_configured) {
         attr_conf.SetDataType(data_type);
         attr_conf.SetTtl(ttl);
         LOG(Error) << "Save Attribute Configuration " << attr_conf.ToJson() << endl;
-        d.SaveAttributeConfiguration(attr_conf);
+        _DAL->SaveAttributeConfiguration(attr_conf);
         AttributeConfigurationHistory attr_conf_history(attr_conf, EVENT_ADD, current_time, current_time_us);
         LOG(Error) << "Save Attribute Configuration History" << attr_conf_history.ToJson() << endl;
-        d.SaveAttributeConfigurationHistory(attr_conf_history);
+        _DAL->SaveAttributeConfigurationHistory(attr_conf_history);
 
         TRACE_EXIT;
         return;
@@ -351,14 +351,14 @@ void HdbPPELK::configure_Attr(string name, int type, int format, int write_type,
         LOG(Debug) << ".... BUT different ttl: updating " << attr_conf.GetTtl() << " to " << ttl << endl;
         attr_conf.SetTtl(ttl);
         LOG(Debug) << "Save Attribute Configuration " << attr_conf.ToJson() << endl;
-        d.SaveAttributeConfiguration(attr_conf);
+        _DAL->SaveAttributeConfiguration(attr_conf);
     }
 
     AttributeConfigurationHistory attr_conf_history(attr_conf);
-    if (d.GetAttributeConfigurationHistory(attr_conf_history)) {
+    if (_DAL->GetAttributeConfigurationHistory(attr_conf_history)) {
         if (attr_conf_history.GetEventType().compare(EVENT_REMOVE) == 0) {
             LOG(Debug) << "Save Attribute Configuration History" << attr_conf_history.ToJson() << endl;
-            d.SaveAttributeConfigurationHistory(attr_conf_history);
+            _DAL->SaveAttributeConfigurationHistory(attr_conf_history);
         }
     }
 
@@ -371,8 +371,7 @@ void HdbPPELK::updateTTL_Attr(string fqdn_attr_name, unsigned int ttl)
 
     AttributeName attr_name(fqdn_attr_name);
     AttributeConfiguration attr_conf(attr_name);
-    DAL d(elk_http_repo);
-    bool already_configured = d.GetAttributeConfiguration(attr_conf);
+    bool already_configured = _DAL->GetAttributeConfiguration(attr_conf);
 
     if (!already_configured) {
         stringstream error_desc;
@@ -381,7 +380,7 @@ void HdbPPELK::updateTTL_Attr(string fqdn_attr_name, unsigned int ttl)
         Tango::Except::throw_exception(EXCEPTION_TYPE_MISSING_ATTR, error_desc.str(), __func__);
     }
     attr_conf.SetTtl(ttl);
-    d.SaveAttributeConfiguration(attr_conf);
+    _DAL->SaveAttributeConfiguration(attr_conf);
 
     TRACE_EXIT;
 }
@@ -399,8 +398,7 @@ void HdbPPELK::event_Attr(string fqdn_attr_name, unsigned char event)
 
     AttributeName attr_name(fqdn_attr_name);
     AttributeConfiguration attr_conf(attr_name);
-    DAL d(elk_http_repo);
-    bool already_configured = d.GetAttributeConfiguration(attr_conf);
+    bool already_configured = _DAL->GetAttributeConfiguration(attr_conf);
 
     if (!already_configured) {
         stringstream error_desc;
@@ -414,13 +412,13 @@ void HdbPPELK::event_Attr(string fqdn_attr_name, unsigned char event)
 
     switch (event) {
     case DB_START: {
-        bool ret = d.GetAttributeConfigurationHistory(attr_conf_history);
+        bool ret = _DAL->GetAttributeConfigurationHistory(attr_conf_history);
         string last_event = attr_conf_history.GetEventType();
         if (ret && last_event == EVENT_START) {
             // It seems there was a crash
             AttributeConfigurationHistory attr_conf_history_crash(
                 attr_conf, EVENT_CRASH, current_time, current_time_us);
-            d.SaveAttributeConfigurationHistory(attr_conf_history_crash);
+            _DAL->SaveAttributeConfigurationHistory(attr_conf_history_crash);
         }
         event_name = EVENT_START;
         break;
@@ -446,7 +444,7 @@ void HdbPPELK::event_Attr(string fqdn_attr_name, unsigned char event)
     }
 
     attr_conf_history.SetEventType(event_name);
-    d.SaveAttributeConfigurationHistory(attr_conf_history);
+    _DAL->SaveAttributeConfigurationHistory(attr_conf_history);
 
     TRACE_EXIT;
 }
@@ -536,7 +534,7 @@ json HdbPPELK::extract_read(Tango::EventData* data, HdbEventDataType ev_data_typ
 {
     TRACE_ENTER;
     json result;
-    
+
     vector<bool> vbool;
     vector<unsigned char> vUnsignedChar;
     vector<short> vshort;
@@ -548,7 +546,7 @@ json HdbPPELK::extract_read(Tango::EventData* data, HdbEventDataType ev_data_typ
     vector<float> vfloat;
     vector<double> vdouble;
     vector<string> vString;
-    
+
     int data_type = ev_data_type.data_type;
     Tango::AttrDataFormat data_format = ev_data_type.data_format;
     bool extract_success = false;
@@ -613,14 +611,12 @@ json HdbPPELK::extract_read(Tango::EventData* data, HdbEventDataType ev_data_typ
             extract_success = true;
         }
         break;
-    case Tango::DEV_STATE:
-    {
-        if (data_format == Tango::SCALAR)
-        {
+    case Tango::DEV_STATE: {
+        if (data_format == Tango::SCALAR) {
             // We cannot use the extract_read() method for the "State" attribute
             Tango::DevState st;
             *data->attr_value >> st;
-            result["vState"] = (int) st;
+            result["vState"] = (int)st;
             extract_success = true;
             break;
         }
@@ -629,7 +625,6 @@ json HdbPPELK::extract_read(Tango::EventData* data, HdbEventDataType ev_data_typ
             extract_success = true;
         }
         break;
-    
     }
     default: {
         stringstream error_desc;
@@ -668,9 +663,9 @@ json HdbPPELK::extract_set(Tango::EventData* data, HdbEventDataType ev_data_type
     vector<string> vString;
     vector<int64_t> vInt64;
     vector<Tango::DevState> vState;
-    
+
     int data_type = ev_data_type.data_type;
-    
+
     bool extract_success = false;
     // There is a read value
     switch (data_type) {
