@@ -273,14 +273,14 @@ void HdbPPELK::insert_Attr(Tango::EventData* data, HdbEventDataType ev_data_type
                                        attr_conf.GetTtl());
 
     if (write_type != Tango::WRITE) // RO or RW
-        attr_event_data.SetValueR(extract_read(data, data_type));
+        attr_event_data.SetValueR(extract_read(data, ev_data_type));
 
     if (write_type != Tango::READ) // RW or WO
-        attr_event_data.SetValueW(extract_set(data, data_type));
+        attr_event_data.SetValueW(extract_set(data, ev_data_type));
 
     if (!d.SaveAttributeEventData(attr_event_data)) {
         stringstream error_desc;
-        LOG(Error) << error_desc << "SaveAttributeEventData ERROR! Json:\n" << attr_event_data.ToJson() << endl;
+        LOG(Error) << error_desc << "->SaveAttributeEventData ERROR! Json:\n" << attr_event_data.ToJson() << endl;
         Tango::Except::throw_exception(EXCEPTION_TYPE_SAVEEVENTDATA, error_desc.str().c_str(), __func__);
     }
 
@@ -532,93 +532,105 @@ string HdbPPELK::get_data_type(int type /*DEV_DOUBLE, DEV_STRING, ..*/,
 }
 //=============================================================================
 //=============================================================================
-json HdbPPELK::extract_read(Tango::EventData* data, int data_type)
+json HdbPPELK::extract_read(Tango::EventData* data, HdbEventDataType ev_data_type)
 {
     TRACE_ENTER;
     json result;
+    
     vector<bool> vbool;
     vector<unsigned char> vUnsignedChar;
     vector<short> vshort;
     vector<unsigned short> vUshort;
-    vector<long> vlong;
-    vector<unsigned long> vUlong;
+    vector<int> vlong;
+    vector<unsigned int> vUlong;
     vector<int64_t> vInt64;
     vector<Tango::DevState> vState;
     vector<float> vfloat;
     vector<double> vdouble;
     vector<string> vString;
+    
+    int data_type = ev_data_type.data_type;
+    Tango::AttrDataFormat data_format = ev_data_type.data_format;
     bool extract_success = false;
     // There is a read value
     switch (data_type) {
     case Tango::DEV_BOOLEAN:
         if (data->attr_value->extract_read(vbool)) {
-            result = vbool;
+            result["vbool"] = vbool;
             extract_success = true;
         };
     case Tango::DEV_UCHAR:
         if (data->attr_value->extract_read(vUnsignedChar)) {
-            result = (vUnsignedChar);
+            result["vUnsignedChar"] = vUnsignedChar;
             extract_success = true;
         }
     case Tango::DEV_SHORT:
         if (data->attr_value->extract_read(vshort)) {
-            result = (vshort);
+            result["vshort"] = vshort;
             extract_success = true;
         }
         break;
     case Tango::DEV_USHORT:
         if (data->attr_value->extract_read(vUshort)) {
-            result = (vUshort);
+            result["vUshort"] = vUshort;
             extract_success = true;
         }
         break;
     case Tango::DEV_LONG:
         if (data->attr_value->extract_read(vlong)) {
-            result = (vlong);
+            result["vlong"] = vlong;
             extract_success = true;
         }
         break;
     case Tango::DEV_ULONG:
         if (data->attr_value->extract_read(vUlong)) {
-            result = (vUlong);
+            result["vUlong"] = vUlong;
             extract_success = true;
         }
         break;
     case Tango::DEV_LONG64:
 
         if (data->attr_value->extract_read(vInt64)) {
-            result = (vInt64);
+            result["vInt64"] = vInt64;
             extract_success = true;
         }
         break;
     case Tango::DEV_FLOAT:
-
         if (data->attr_value->extract_read(vfloat)) {
-            result = (vfloat);
+            result["vfloat"] = vfloat;
             extract_success = true;
         }
         break;
     case Tango::DEV_DOUBLE:
-
         if (data->attr_value->extract_read(vdouble)) {
-            result = (vdouble);
+            result["vdouble"] = vdouble;
             extract_success = true;
         }
         break;
     case Tango::DEV_STRING:
-
         if (data->attr_value->extract_read(vString)) {
-            result = (vString);
+            result["vString"] = vString;
             extract_success = true;
         }
         break;
     case Tango::DEV_STATE:
-
+    {
+        if (data_format == Tango::SCALAR)
+        {
+            // We cannot use the extract_read() method for the "State" attribute
+            Tango::DevState st;
+            *data->attr_value >> st;
+            result["vState"] = (int) st;
+            extract_success = true;
+            break;
+        }
         if (data->attr_value->extract_read(vState)) {
-            result = (vState);
+            result["vState"] = vState;
             extract_success = true;
         }
         break;
+    
+    }
     default: {
         stringstream error_desc;
         error_desc << "Attribute " << data->attr_name << " type (" << (int)(data_type) << ")) not supported" << ends;
@@ -640,7 +652,7 @@ json HdbPPELK::extract_read(Tango::EventData* data, int data_type)
 
 //=============================================================================
 //=============================================================================
-json HdbPPELK::extract_set(Tango::EventData* data, int data_type)
+json HdbPPELK::extract_set(Tango::EventData* data, HdbEventDataType ev_data_type)
 {
     TRACE_ENTER;
     json result;
@@ -648,83 +660,82 @@ json HdbPPELK::extract_set(Tango::EventData* data, int data_type)
     vector<unsigned char> vUnsignedChar;
     vector<short> vshort;
     vector<unsigned short> vUshort;
-    vector<long> vlong;
-    vector<unsigned long> vUlong;
+    vector<int> vlong;
+    vector<unsigned int> vUlong;
     vector<float> vfloat;
     vector<double> vdouble;
 
     vector<string> vString;
     vector<int64_t> vInt64;
     vector<Tango::DevState> vState;
+    
+    int data_type = ev_data_type.data_type;
+    
     bool extract_success = false;
     // There is a read value
     switch (data_type) {
     case Tango::DEV_BOOLEAN:
         if (data->attr_value->extract_set(vbool)) {
+            result["vbool"] = vbool;
             extract_success = true;
-            result = vbool;
         };
     case Tango::DEV_UCHAR:
         if (data->attr_value->extract_set(vUnsignedChar)) {
-            result = (vUnsignedChar);
+            result["vUnsignedChar"] = vUnsignedChar;
             extract_success = true;
         }
     case Tango::DEV_SHORT:
         if (data->attr_value->extract_set(vshort)) {
-            result = (vshort);
+            result["vshort"] = vshort;
             extract_success = true;
         }
         break;
     case Tango::DEV_USHORT:
         if (data->attr_value->extract_set(vUshort)) {
-            result = (vUshort);
+            result["vUshort"] = vUshort;
             extract_success = true;
         }
         break;
     case Tango::DEV_LONG:
         if (data->attr_value->extract_set(vlong)) {
-            result = (vlong);
+            result["vlong"] = vlong;
             extract_success = true;
         }
         break;
     case Tango::DEV_ULONG:
         if (data->attr_value->extract_set(vUlong)) {
-            result = (vUlong);
+            result["vUlong"] = vUlong;
             extract_success = true;
         }
         break;
     case Tango::DEV_LONG64:
 
         if (data->attr_value->extract_set(vInt64)) {
-            result = (vInt64);
+            result["vInt64"] = vInt64;
             extract_success = true;
         }
         break;
     case Tango::DEV_FLOAT:
-
         if (data->attr_value->extract_set(vfloat)) {
-            result = (vfloat);
+            result["vfloat"] = vfloat;
             extract_success = true;
         }
         break;
     case Tango::DEV_DOUBLE:
-
         if (data->attr_value->extract_set(vdouble)) {
-            result = (vdouble);
+            result["vdouble"] = vdouble;
             extract_success = true;
         }
         break;
     case Tango::DEV_STRING:
-
         if (data->attr_value->extract_set(vString)) {
-            result = (vString);
+            result["vString"] = vString;
             extract_success = true;
         }
         break;
     case Tango::DEV_STATE:
-
         if (data->attr_value->extract_set(vState)) {
-            result = (vState);
+            result["vState"] = vState;
             extract_success = true;
         }
         break;

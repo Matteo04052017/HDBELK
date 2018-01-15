@@ -157,7 +157,8 @@ string AttributeConfiguration::GetJsonQuery()
              << " { \"match\": { \"domain\": \"" << domain << "\" } },"
              << " { \"match\": { \"family\": \"" << family << "\" } } , "
              << " { \"match\": { \"member\": \"" << member << "\" } },"
-             << " { \"match\": { \"name\": \"" << name << "\" } }"
+             << " { \"match\": { \"name\": \"" << name << "\" } },"
+             << " { \"match\": { \"DataObject\": \"AttributeConfiguration\" } }"
              << "]"
              << "}"
              << "}, \"size\": 1"
@@ -175,7 +176,8 @@ string AttributeConfiguration::ToJson()
                 { "name", name },
                 { "facility", facility },
                 { "port", port },
-                { "ttl", ttl } };
+                { "ttl", ttl },
+                { "DataObject", "AttributeConfiguration" } };
 
     return j2.dump();
 }
@@ -282,7 +284,8 @@ string HDBPP::AttributeConfigurationHistory::ToJson()
     json j2 = { { "attribute_configuration_id", attribute_configuration_id },
                 { "eventType", eventType },
                 { "time", time },
-                { "time_us", time_us } };
+                { "time_us", time_us },
+                { "DataObject", "AttributeConfigurationHistory" } };
 
     return j2.dump();
 }
@@ -292,8 +295,8 @@ string HDBPP::AttributeConfigurationHistory::ToElkScript4Update()
     ostringstream json_str;
     json_str << "ctx._source.attribute_configuration_id = '" << attribute_configuration_id << "';"
              << "ctx._source.eventType = '" << eventType << "';"
-             << "ctx._source.time = '" << time << "';"
-             << "ctx._source.time_us = '" << time_us << "';";
+             << "ctx._source.time = " << time << ";"
+             << "ctx._source.time_us = " << time_us << ";";
 
     string result = json_str.str().c_str();
     return result;
@@ -306,7 +309,8 @@ string HDBPP::AttributeConfigurationHistory::GetJsonQuery()
              << "\"query\": {"
              << "\"bool\": {"
              << "\"must\": ["
-             << " { \"match\": { \"attribute_configuration_id\": \"" << attribute_configuration_id << "\" } }"
+             << " { \"match\": { \"attribute_configuration_id\": \"" << attribute_configuration_id << "\" } },"
+             << " { \"match\": { \"DataObject\": \"AttributeConfigurationHistory\" } }"
              << "]"
              << "}"
              << "}, \"size\": 1"
@@ -319,7 +323,16 @@ void HDBPP::AttributeConfigurationHistory::SetParameterFromJson(json& p_json)
 {
     attribute_configuration_id = p_json["attribute_configuration_id"];
     eventType = p_json["eventType"];
-    time = p_json["time"];
+    try
+    {
+        time = p_json["time"];
+    }
+    catch (int e)
+    {
+        string str_time = p_json["time"];
+        std::istringstream iss(str_time);
+        iss >> time;
+    }
     time_us = p_json["time_us"];
 }
 
@@ -474,17 +487,20 @@ string HDBPP::AttributeParameter::ToJson()
                { PARAM_COL_ARCHIVERELCHANGE, GetArchiveRelChange() },
                { PARAM_COL_ARCHIVEABSCHANGE, GetArchiveAbsChange() },
                { PARAM_COL_ARCHIVEPERIOD, GetArchivePeriod() },
-               { PARAM_COL_DESCRIPTION, GetDescription() }, };
+               { PARAM_COL_DESCRIPTION, GetDescription() },
+               { "DataObject", "AttributeParameter" } };
 
     return j.dump();
 }
 
 string HDBPP::AttributeParameter::ToElkScript4Update()
 {
+    throw string("The data object 'AttributeParameter' should not be updated in the DB");
 }
 
 string HDBPP::AttributeParameter::GetJsonQuery()
 {
+    throw string("The data object 'AttributeParameter' should not be read from the DB");
 }
 
 HDBPP::AttributeParameter::AttributeParameter(string pattribute_configuration_id,
@@ -510,6 +526,8 @@ HDBPP::AttributeParameter::AttributeParameter(string pattribute_configuration_id
     label = plabel;
     unit = punit;
     standardUnit = pstandardUnit;
+    diplayUnit = pdiplayUnit;
+    description = pdescription;
     format = pformat;
     archiveRelChange = parchiveRelChange;
     archiveAbsChange = parchiveAbsChange;
@@ -695,7 +713,8 @@ string HDBPP::AttributeEventData::ToJson()
                { SC_COL_INS_TIME, GetInsertTime() },
                { SC_COL_INS_TIME_US, GetInsertTimeUs() },
                { SC_COL_QUALITY, GetQuality() },
-               { SC_COL_ERROR_DESC, GetErrorDesc() } };
+               { SC_COL_ERROR_DESC, GetErrorDesc() },
+               { "DataObject", "AttributeEventData" } };
 
     if (value_r.size() > 0) // RO or RW
         j += { SC_COL_VALUE_R, value_r };

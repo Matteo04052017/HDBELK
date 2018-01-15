@@ -58,9 +58,9 @@ private:
 
     void string_vector2map(vector<string> str, string separator, map<string, string>* results);
 
-    json extract_read(Tango::EventData* data, int data_type);
+    json extract_read(Tango::EventData* data, HdbEventDataType ev_data_type);
 
-    json extract_set(Tango::EventData* data, int data_type);
+    json extract_set(Tango::EventData* data, HdbEventDataType ev_data_type);
 
 public:
     ~HdbPPELK();
