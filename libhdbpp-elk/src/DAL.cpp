@@ -48,6 +48,7 @@ bool DAL::InsertElastic(string index, string type, string in_json, string& out_i
     }
 
     RestClient::disable();
+    delete conn;
 
     return found;
 }
@@ -78,6 +79,7 @@ bool DAL::UpdateElastic(string index, string type, string id, string update_json
     }
 
     RestClient::disable();
+    delete conn;
     return found;
 }
 
@@ -104,6 +106,8 @@ bool DAL::SearchElastic(string index, string type, string json_search, json& out
         errors += { r.code, r.body };
     }
 
+    RestClient::disable();
+    delete conn;
     return found;
 }
 
@@ -127,6 +131,8 @@ bool DAL::GetElasticById(string index, string type, string id, json& out_json)
         errors += { r.code, r.body };
     }
 
+    RestClient::disable();
+    delete conn;
     return found;
 }
 
