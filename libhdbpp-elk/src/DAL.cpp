@@ -151,8 +151,11 @@ bool DAL::GetAttributeConfiguration(AttributeConfiguration& p_attr_conf)
         }
 
         json res;
-        if (!SearchElastic("archiving", "attribute", p_attr_conf.GetJsonQuery(), res))
+        if (!SearchElastic("archiving", "attribute", p_attr_conf.GetJsonQuery(), res)){
+            LOG(Debug) << "(Attribute configuration DB) No result for " << p_attr_conf.GetJsonQuery() << endl;
             return false;
+            
+        }
 
         LOG(Debug) << "Attribute configuration DB: " << res << endl;
 

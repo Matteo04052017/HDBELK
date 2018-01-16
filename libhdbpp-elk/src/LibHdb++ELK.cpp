@@ -90,9 +90,9 @@ HdbPPELK::HdbPPELK(vector<string> configuration)
 HdbPPELK::~HdbPPELK()
 {
     TRACE_ENTER;
-    
-    delete(_DAL);
-    
+
+    delete (_DAL);
+
     TRACE_EXIT;
 }
 
@@ -542,6 +542,7 @@ json HdbPPELK::extract_read(Tango::EventData* data, HdbEventDataType ev_data_typ
     vector<int> vlong;
     vector<unsigned int> vUlong;
     vector<int64_t> vInt64;
+    vector<uint64_t> cUInt64;
     vector<Tango::DevState> vState;
     vector<float> vfloat;
     vector<double> vdouble;
@@ -574,7 +575,7 @@ json HdbPPELK::extract_read(Tango::EventData* data, HdbEventDataType ev_data_typ
             extract_success = true;
         }
         break;
-    case Tango::DEV_LONG:
+    case Tango::DEV_LONG: // tango://localhost:10000/sys/tg_test/1/no_value problem!
         if (data->attr_value->extract_read(vlong)) {
             result["vlong"] = vlong;
             extract_success = true;
@@ -587,7 +588,6 @@ json HdbPPELK::extract_read(Tango::EventData* data, HdbEventDataType ev_data_typ
         }
         break;
     case Tango::DEV_LONG64:
-
         if (data->attr_value->extract_read(vInt64)) {
             result["vInt64"] = vInt64;
             extract_success = true;
@@ -626,6 +626,13 @@ json HdbPPELK::extract_read(Tango::EventData* data, HdbEventDataType ev_data_typ
         }
         break;
     }
+    case Tango::DEV_ULONG64: {
+        if (data->attr_value->extract_read(cUInt64)) {
+            result["cUInt64"] = cUInt64;
+            extract_success = true;
+        }
+        break;
+    }
     default: {
         stringstream error_desc;
         error_desc << "Attribute " << data->attr_name << " type (" << (int)(data_type) << ")) not supported" << ends;
@@ -659,7 +666,7 @@ json HdbPPELK::extract_set(Tango::EventData* data, HdbEventDataType ev_data_type
     vector<unsigned int> vUlong;
     vector<float> vfloat;
     vector<double> vdouble;
-
+    vector<uint64_t> cUInt64;
     vector<string> vString;
     vector<int64_t> vInt64;
     vector<Tango::DevState> vState;
@@ -704,12 +711,17 @@ json HdbPPELK::extract_set(Tango::EventData* data, HdbEventDataType ev_data_type
         }
         break;
     case Tango::DEV_LONG64:
-
         if (data->attr_value->extract_set(vInt64)) {
             result["vInt64"] = vInt64;
             extract_success = true;
         }
         break;
+    case Tango::DEV_ULONG64: {
+        if (data->attr_value->extract_read(cUInt64)) {
+            result["cUInt64"] = cUInt64;
+            extract_success = true;
+        }
+    }
     case Tango::DEV_FLOAT:
         if (data->attr_value->extract_set(vfloat)) {
             result["vfloat"] = vfloat;
