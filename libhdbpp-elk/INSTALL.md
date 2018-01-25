@@ -18,16 +18,6 @@ Toolchain dependencies:
 
 * CMake 3.0.0 or greater is required to perform the build.
 
-### Debian Stetch Packages
-
-#### Libhdbpp Debian Package
-
-There is also a debian stretch package available to install this [here](https://bintray.com/tango-controls/debian/libhdb%2B%2B6) at bintray. 
-
-#### Datastax CPP Driver Release 2.2.1 Debian Package
-
-It is possible to take a version 2.2.1 cpp-driver debian package we have made available [here](https://bintray.com/tango-controls/debian/cassandra-cpp-driver) on bintray. This has its dependencies set correctly for libuv1. This option is only avilable on debian stretch.
-
 ## Standard flags
 
 The build system is CMake therefore standard CMake flags can be used to influence the build and installation process. Several custom flags are defined to build the correct library. They are:

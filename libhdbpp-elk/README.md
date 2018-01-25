@@ -18,7 +18,7 @@ This release version of the library has made a few changes to standardize its us
 ## Documentation
 
 * See the tango documentation [here](http://tango-controls.readthedocs.io/en/latest/administration/services/hdbpp/index.html#hdb-an-archiving-historian-service) for broader information about the HB++ archiving system and its integration into Tango Controls
-* Libhdbpp-ElasticSearch [CHANGELOG.md](https://github.com/tango-controls-hdbpp/libhdbpp/blob/master/CHANGELOG.md) contains the latest changes both released and in development.
+* Libhdbpp-ElasticSearch [CHANGELOG.md](https://github.com/Matteo04052017/HDBELK/blob/master/libhdbpp-elk/CHANGELOG.md) contains the latest changes both released and in development.
 
 ## Bugs Reports
 
@@ -28,7 +28,7 @@ Please file bug reports above in the issues section.
 
 To compile this library, you will need to download and install the [DataStax ElasticSearch C++ Driver](https://github.com/datastax/cpp-driver). The Datastax ElasticSearch C++ Driver depends on [Libuv](https://github.com/libuv/libuv) and this will need installing also.
 
-See the [INSTALL.md](https://github.com/tango-controls-hdbpp/libhdbpp-ElasticSearch/blob/master/INSTALL.md) file for  detailed instructions on how to build and install libhdbpp-ElasticSearch.
+See the [INSTALL.md](https://github.com/Matteo04052017/HDBELK/blob/master/libhdbpp-elk/INSTALL.md) file for  detailed instructions on how to build and install libhdbpp-ElasticSearch.
 
 ## License
 
