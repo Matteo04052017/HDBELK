@@ -1,2 +1,0 @@
-/usr/local/lib/libhdb++ELK.so.7.0.1
-/usr/local/lib/libhdb++ELK.so.7

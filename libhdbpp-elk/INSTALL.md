@@ -6,7 +6,6 @@
 Ensure the development version of the dependencies are installed. These are as follows:
 
 * [libhdbpp](https://github.com/tango-controls-hdbpp/libhdbpp) - (libhdb++6). Build and install according its instructions.
-* [Datastax CPP Driver](https://github.com/datastax/cpp-driver), version 2.2.1.
 * Tango Controls 9 or higher.
 * omniORB release 4 - libomniorb4 and libomnithread.
 * libzmq - libzmq3-dev or libzmq5-dev.
@@ -18,16 +17,6 @@ The library can be built with Tango Controls install via debian package or sourc
 Toolchain dependencies:
 
 * CMake 3.0.0 or greater is required to perform the build.
-
-### Datastax CPP Driver
-
-Download the [DataStax Cassandra C++ Driver](https://github.com/datastax/cpp-driver) from github and install. This is dependent on having [Libuv](https://github.com/libuv/libuv) built and installed on the system. Datastax provides detailed [instructions](http://datastax.github.io/cpp-driver/topics/building/) to build the C++ Driver.
-
-Libhdbpp-Cassandra was developed on a debian system, so both libuv and the Datastax C++ Driver were installed from source. If you build and use libuv from a custom location (e.g. local test build environment,then you will need to inform the C++ Driver CMake build system where to search, example:
-
-```bash
-cmake -DLIBUV_INCLUDE_DIR=/my/custom/include -DLIBUV_LIBRARY=/my/custom/lib ..
-```
 
 ### Debian Stetch Packages
 
@@ -94,14 +83,13 @@ cmake -DCMAKE_INCLUDE_PATH=/usr/include/tango ..
 First clone the repository:
 
 ```
-git clone http://github.com/tango-controls-hdbpp/libhdbpp-cassandra.git
+git clone https://github.com/Matteo04052017/HDBELK.git
 ```
 
 An out of source build is required by the CMakeLists file, so create a build directory to run CMake from:
 
 ```
-mkdir libhdbpp-cassandra/build
-cd libhdbpp-cassandra/build
+cd libhdbpp-elk/build
 ```
 
 Then configure with cmake:

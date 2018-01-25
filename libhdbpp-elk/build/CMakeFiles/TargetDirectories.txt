@@ -1,2 +1,0 @@
-/home/osboxes/tango-dev/HDB++/libhdbpp-elk/build/CMakeFiles/shared_library.dir
-/home/osboxes/tango-dev/HDB++/libhdbpp-elk/build/CMakeFiles/object_library.dir
