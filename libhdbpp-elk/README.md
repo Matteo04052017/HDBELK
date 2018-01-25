@@ -26,8 +26,6 @@ Please file bug reports above in the issues section.
 
 ## Building and Installation
 
-To compile this library, you will need to download and install the [DataStax ElasticSearch C++ Driver](https://github.com/datastax/cpp-driver). The Datastax ElasticSearch C++ Driver depends on [Libuv](https://github.com/libuv/libuv) and this will need installing also.
-
 See the [INSTALL.md](https://github.com/Matteo04052017/HDBELK/blob/master/libhdbpp-elk/INSTALL.md) file for  detailed instructions on how to build and install libhdbpp-ElasticSearch.
 
 ## License

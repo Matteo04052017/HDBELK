@@ -112,5 +112,3 @@ After the build has completed, simply run:
 ```
 make install
 ```
-
-On installation the cql scripts under etc/ will be placed in /usr/shared/libhdb++cassandra/
