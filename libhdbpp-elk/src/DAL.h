@@ -11,6 +11,10 @@
 #ifndef _HDBPP_DAL_H
 #define _HDBPP_DAL_H
 
+#define ELK_INDEX "archiving_with_maps"
+#define ELK_TYPE "doc"
+
+
 using namespace std;
 using json = nlohmann::json;
 
@@ -70,6 +74,8 @@ public:
     bool SaveAttributeParameter(AttributeParameter& p_attr_param);
 
     bool SaveAttributeEventData(AttributeEventData& p_attr_event_data);
+    
+    bool SaveDocument(Document& p_doc);
 
     DAL(string pelk_http_repo);
     ~DAL();

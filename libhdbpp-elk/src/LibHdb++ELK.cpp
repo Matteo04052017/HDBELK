@@ -284,6 +284,13 @@ void HdbPPELK::insert_Attr(Tango::EventData* data, HdbEventDataType ev_data_type
         LOG(Error) << error_desc << "->SaveAttributeEventData ERROR! Json:\n" << _DAL->GetErrors() << endl;
         Tango::Except::throw_exception(EXCEPTION_TYPE_SAVEEVENTDATA, error_desc.str().c_str(), __func__);
     }
+    
+    Document doc(attr_conf, attr_event_data, asctime(tms));
+    if (!_DAL->SaveDocument(doc)) {
+        stringstream error_desc;
+        LOG(Error) << error_desc << "->SaveDocument ERROR! Json:\n" << _DAL->GetErrors() << endl;
+        Tango::Except::throw_exception(EXCEPTION_TYPE_SAVEEVENTDATA, error_desc.str().c_str(), __func__);
+    }
 
     TRACE_EXIT;
 }

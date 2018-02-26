@@ -30,7 +30,7 @@ bool DAL::InsertElastic(string index, string type, string in_json, string& out_i
 {
     std::stringstream qurl;
     qurl << elk_http_repo << "/" << index << "/" << type << "/";
-
+    
     RestClient::init();
     RestClient::Connection* conn = new RestClient::Connection(qurl.str());
     RestClient::HeaderFields headers;
@@ -151,7 +151,7 @@ bool DAL::GetAttributeConfiguration(AttributeConfiguration& p_attr_conf)
         }
 
         json res;
-        if (!SearchElastic("archiving", "attribute", p_attr_conf.GetJsonQuery(), res)){
+        if (!SearchElastic(ELK_INDEX, ELK_TYPE, p_attr_conf.GetJsonQuery(), res)){
             LOG(Debug) << "(Attribute configuration DB) No result for " << p_attr_conf.GetJsonQuery() << endl;
             return false;
             
@@ -185,11 +185,11 @@ bool DAL::SaveAttributeConfiguration(AttributeConfiguration& p_attr_conf)
         if (!p_attr_conf.GetID().empty()) {
             // update if not empty
             LOG(Debug) << "updating attribute configuration: " << p_attr_conf.GetID() << endl;
-            return UpdateElastic("archiving", "attribute", p_attr_conf.GetID(), p_attr_conf.ToElkScript4Update());
+            return UpdateElastic(ELK_INDEX, ELK_TYPE, p_attr_conf.GetID(), p_attr_conf.ToElkScript4Update());
         }
 
         string out_id;
-        if (!InsertElastic("archiving", "attribute", p_attr_conf.ToJson(), out_id))
+        if (!InsertElastic(ELK_INDEX, ELK_TYPE, p_attr_conf.ToJson(), out_id))
             return false;
         LOG(Debug) << "Inserted attribute configuration: " << out_id << endl;
         p_attr_conf.SetID(out_id);
@@ -207,7 +207,7 @@ bool DAL::GetAttributeConfigurationHistory(AttributeConfigurationHistory& p_attr
     try
     {
         json res;
-        if (!SearchElastic("archiving", "attribute", p_attr_conf_history.GetJsonQuery(), res))
+        if (!SearchElastic(ELK_INDEX, ELK_TYPE, p_attr_conf_history.GetJsonQuery(), res))
             return false;
 
         LOG(Debug) << "Attribute configuration history: \n" << res << endl;
@@ -232,11 +232,11 @@ bool DAL::SaveAttributeConfigurationHistory(AttributeConfigurationHistory& p_att
         if (!p_attr_conf_history.GetID().empty()) {
             LOG(Debug) << "Updating attribute configuration history: " << p_attr_conf_history.GetID() << endl;
             return UpdateElastic(
-                "archiving", "attribute", p_attr_conf_history.GetID(), p_attr_conf_history.ToElkScript4Update());
+                ELK_INDEX, ELK_TYPE, p_attr_conf_history.GetID(), p_attr_conf_history.ToElkScript4Update());
         }
 
         string out_id;
-        if (!InsertElastic("archiving", "attribute", p_attr_conf_history.ToJson(), out_id))
+        if (!InsertElastic(ELK_INDEX, ELK_TYPE, p_attr_conf_history.ToJson(), out_id))
             return false;
         LOG(Debug) << "Inserted attribute configuration history: " << out_id << endl;
         p_attr_conf_history.SetID(out_id);
@@ -254,16 +254,45 @@ bool DAL::SaveAttributeParameter(AttributeParameter& p_attr_param)
     try
     {
         json res;
+        if (SearchElastic(ELK_INDEX, ELK_TYPE, p_attr_param.GetJsonQuery(), res))
+        {
+            p_attr_param.SetID(res["hits"]["hits"][0]["_id"]);
+        }
+        
         if (!p_attr_param.GetID().empty()) {
             LOG(Debug) << "Updating attribute parameter: " << p_attr_param.GetID() << endl;
-            return UpdateElastic("archiving", "attribute", p_attr_param.GetID(), p_attr_param.ToElkScript4Update());
+            //LOG(Debug) << "ElkScript4Update: " << p_attr_param.ToElkScript4Update()<< endl;
+            return UpdateElastic(ELK_INDEX, ELK_TYPE, p_attr_param.GetID(), p_attr_param.ToElkScript4Update());
         }
 
         string out_id;
-        if (!InsertElastic("archiving", "attribute", p_attr_param.ToJson(), out_id))
+        if (!InsertElastic(ELK_INDEX, ELK_TYPE, p_attr_param.ToJson(), out_id))
             return false;
         LOG(Debug) << "Inserted attribute parameter: " << out_id << endl;
         p_attr_param.SetID(out_id);
+        return true;
+    }
+    catch (int e)
+    {
+        LOG(Debug) << "Ex#" << e << "::" << errors.dump() << endl;
+        return false;
+    }
+}
+
+bool DAL::SaveDocument(Document& p_doc)
+{
+    try
+    {
+        json res;
+        if (!p_doc.GetID().empty()) {
+            throw string("The data object 'AttributeEventData' should not be updated in the DB");
+        }
+
+        string out_id;
+        if (!InsertElastic(ELK_INDEX, ELK_TYPE, p_doc.ToJson(), out_id))
+            return false;
+        LOG(Debug) << "Inserted Document: " << out_id << endl;
+        p_doc.SetID(out_id);
         return true;
     }
     catch (int e)
@@ -283,7 +312,7 @@ bool DAL::SaveAttributeEventData(AttributeEventData& p_attr_event_data)
         }
 
         string out_id;
-        if (!InsertElastic("archiving", "attribute", p_attr_event_data.ToJson(), out_id))
+        if (!InsertElastic(ELK_INDEX, ELK_TYPE, p_attr_event_data.ToJson(), out_id))
             return false;
         LOG(Debug) << "Inserted AttributeEventData: " << out_id << endl;
         p_attr_event_data.SetID(out_id);

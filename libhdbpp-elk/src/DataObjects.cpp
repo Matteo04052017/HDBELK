@@ -497,12 +497,41 @@ string HDBPP::AttributeParameter::ToJson()
 
 string HDBPP::AttributeParameter::ToElkScript4Update()
 {
-    throw string("The data object 'AttributeParameter' should not be updated in the DB");
+    ostringstream json_str;
+    json_str << "ctx._source." << PARAM_COL_ID << " = '" << GetAttributeConfigurationID() << "';"
+             << "ctx._source." << PARAM_COL_EV_TIME << " = '" << GetEvTime() << "';"
+             << "ctx._source." << PARAM_COL_EV_TIME_US << " = '" << GetEvTimeUs() << "';"
+             << "ctx._source." << PARAM_COL_INS_TIME << " = '" << GetInsertTime() << "';"
+             << "ctx._source." << PARAM_COL_INS_TIME_US << " = '" << GetInsertTimeUs() << "';"
+             << "ctx._source." << PARAM_COL_LABEL << " = '" << GetLabel() << "';"
+             << "ctx._source." << PARAM_COL_UNIT << " = '" << GetUnit() << "';"
+             << "ctx._source." << PARAM_COL_STANDARDUNIT << " = '" << GetStandardUnit() << "';"
+             << "ctx._source." << PARAM_COL_DISPLAYUNIT << " = '" << GetDiplayUnit() << "';"
+             << "ctx._source." << PARAM_COL_FORMAT << " = '" << GetFormat() << "';"
+             << "ctx._source." << PARAM_COL_ARCHIVERELCHANGE << " = '" << GetArchiveRelChange() << "';"
+             << "ctx._source." << PARAM_COL_ARCHIVEABSCHANGE << " = '" << GetArchiveAbsChange() << "';"
+             << "ctx._source." << PARAM_COL_ARCHIVEPERIOD << " = '" << GetArchivePeriod() << "';"
+             << "ctx._source." << PARAM_COL_DESCRIPTION << " = '" << GetDescription() << "';";
+
+    string result = json_str.str().c_str();
+    return result;
 }
 
 string HDBPP::AttributeParameter::GetJsonQuery()
 {
-    throw string("The data object 'AttributeParameter' should not be read from the DB");
+    ostringstream json_str;
+    json_str << "{"
+             << "\"query\": {"
+             << "\"bool\": {"
+             << "\"must\": ["
+             << " { \"match\": { \"" << PARAM_COL_ID << "\" : \"" << GetAttributeConfigurationID() << "\" } },"
+             << " { \"match\": { \"DataObject\": \"AttributeParameter\" } }"
+             << "]"
+             << "}"
+             << "}, \"size\": 1"
+             << "}";
+    string result = json_str.str().c_str();
+    return result;
 }
 
 HDBPP::AttributeParameter::AttributeParameter(string pattribute_configuration_id,
@@ -738,4 +767,94 @@ string HDBPP::AttributeEventData::ToElkScript4Update()
 string HDBPP::AttributeEventData::GetJsonQuery()
 {
     throw string("The data object 'AttributeEventData' should not be searched in the DB");
+}
+
+void HDBPP::Document::SetParameterFromJson(json& p_json)
+{
+    throw string("The data object 'AttributeEventData' should not be read from the DB");
+}
+
+string HDBPP::Document::ToJson()
+{
+    json j = { { "datetime", datetime },
+               { "domain", domain },
+               { "family", family },
+               { "member", member },
+               { "name", name },
+               { "host", host },
+               { SC_COL_QUALITY, quality },
+               { SC_COL_ERROR_DESC, errorDesc },
+               { "DataObject", "Document" } };
+
+    ostringstream valuekeyname;
+    valuekeyname << name << ".";
+    if (value_r.size() > 0) // RO or RW
+    {
+        valuekeyname << SC_COL_VALUE_R;
+        j += { valuekeyname.str(), value_r };
+    }
+    if (value_w.size() > 0) // RW or WO
+    {
+        valuekeyname << SC_COL_VALUE_W;
+        j += { valuekeyname.str(), value_w };
+    }
+
+    if (ttl != 0)
+        j += { "_ttl", { "enabled", true, "default", ttl + "ms" } };
+
+    return j.dump();
+}
+
+string HDBPP::Document::ToElkScript4Update()
+{
+    throw string("The data object 'AttributeEventData' should not be read from the DB");
+}
+
+string HDBPP::Document::GetJsonQuery()
+{
+    throw string("The data object 'AttributeEventData' should not be read from the DB");
+}
+
+HDBPP::Document::~Document()
+{
+}
+
+HDBPP::Document::Document(string phost,
+                          string pdomain,
+                          string pfamily,
+                          string pmember,
+                          string pname,
+                          int pttl,
+                          string pdatetime,
+                          int pquality,
+                          string perrorDesc,
+                          json pvalue_r,
+                          json pvalue_w)
+{
+    host = phost;
+    domain = pdomain;
+    family = pfamily;
+    member = pmember;
+    name = pname;
+    ttl = pttl;
+    datetime = pdatetime;
+    quality = pquality;
+    errorDesc = perrorDesc;
+    value_r = pvalue_r;
+    value_w = pvalue_w;
+}
+
+HDBPP::Document::Document(AttributeConfiguration attr_conf, AttributeEventData eventData, string pdatetime)
+{
+    host = attr_conf.GetFacility();
+    domain = attr_conf.GetDomain();
+    family = attr_conf.GetFamily();
+    member = attr_conf.GetMember();
+    name = attr_conf.GetName();
+    ttl = attr_conf.GetTtl();
+    datetime = pdatetime;
+    quality = eventData.GetQuality();
+    errorDesc = eventData.GetErrorDesc();
+    value_r = eventData.GetValueR();
+    value_w = eventData.GetValueW();
 }

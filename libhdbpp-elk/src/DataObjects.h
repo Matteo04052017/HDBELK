@@ -245,6 +245,144 @@ public:
     const json& GetValueR() const;
     const json& GetValueW() const;
 };
+
+class Document
+{
+private:
+    string ID;
+    string host;
+
+    string domain;
+    string family;
+    string member;
+    string name;
+    int ttl;
+
+    string datetime;
+    int quality;
+    string errorDesc;
+    json value_r;
+    json value_w;
+
+public:
+    void SetID(const string& ID)
+    {
+        this->ID = ID;
+    }
+    void SetDatetime(const string& datetime)
+    {
+        this->datetime = datetime;
+    }
+    void SetDomain(const string& domain)
+    {
+        this->domain = domain;
+    }
+    void SetErrorDesc(const string& errorDesc)
+    {
+        this->errorDesc = errorDesc;
+    }
+    void SetFamily(const string& family)
+    {
+        this->family = family;
+    }
+    void SetHost(const string& host)
+    {
+        this->host = host;
+    }
+    void SetMember(const string& member)
+    {
+        this->member = member;
+    }
+    void SetName(const string& name)
+    {
+        this->name = name;
+    }
+    void SetQuality(int quality)
+    {
+        this->quality = quality;
+    }
+    void SetTtl(int ttl)
+    {
+        this->ttl = ttl;
+    }
+    void SetValueR(const json& value_r)
+    {
+        this->value_r = value_r;
+    }
+    void SetValueW(const json& value_w)
+    {
+        this->value_w = value_w;
+    }
+    const string& GetID() const
+    {
+        return ID;
+    }
+    const string& GetDatetime() const
+    {
+        return datetime;
+    }
+    const string& GetDomain() const
+    {
+        return domain;
+    }
+    const string& GetErrorDesc() const
+    {
+        return errorDesc;
+    }
+    const string& GetFamily() const
+    {
+        return family;
+    }
+    const string& GetHost() const
+    {
+        return host;
+    }
+    const string& GetMember() const
+    {
+        return member;
+    }
+    const string& GetName() const
+    {
+        return name;
+    }
+    int GetQuality() const
+    {
+        return quality;
+    }
+    int GetTtl() const
+    {
+        return ttl;
+    }
+    const json& GetValueR() const
+    {
+        return value_r;
+    }
+    const json& GetValueW() const
+    {
+        return value_w;
+    }
+
+    void SetParameterFromJson(json& p_json);
+    string ToJson();
+    string ToElkScript4Update();
+    string GetJsonQuery();
+
+    Document(string phost,
+             string pdomain,
+             string pfamily,
+             string pmember,
+             string pname,
+             int pttl,
+             string pdatetime,
+             int pquality,
+             string perrorDesc,
+             json pvalue_r,
+             json pvalue_w);
+
+    Document(AttributeConfiguration attr_conf, AttributeEventData eventData, string pdatetime);
+
+    ~Document();
+};
 };
 
 #endif
