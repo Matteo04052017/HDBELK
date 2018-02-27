@@ -45,7 +45,8 @@
 #include <fstream>
 
 /*----- PROTECTED REGION END -----*/	//	EarthQuakeGenerator.h
-
+#include "json/json.hpp"
+using json = nlohmann::json;
 /**
  *  EarthQuakeGenerator class description:
  *    EarthQuakeGenerator

@@ -429,11 +429,11 @@ void EarthQuakeGenerator::next_event()
         if (!allEventInformation->empty()) {
             string tmpString = allEventInformation->front();
             cout << tmpString << "\n";
-            string dateRef = tmpString.substr(5, 20);
+            string dateRef = tmpString.substr(5, 21);
             float latitude = stof(tmpString.substr(27, 7).c_str());
             float longitude = stof(tmpString.substr(34, 6).c_str());
             float depth = stof(tmpString.substr(42, 4).c_str());
-            string magnitude = tmpString.substr(48, 7);
+            string magnitude = tmpString.substr(48, 3);
             string location = tmpString.substr(56, tmpString.size());
 
             cout << "setting attributes"
@@ -451,19 +451,22 @@ void EarthQuakeGenerator::next_event()
             attr_ReportedMagnitudes_read[0] = new char[magnitude.length() + 1];
             strcpy(attr_ReportedMagnitudes_read[0], magnitude.c_str());
 
-            //*attr_GeographicaLocation_read = Tango::string_dup(location.c_str());
+            //*attr_GeographicaLocation_read = Tango::string_dup(loscation.c_str());
             attr_GeographicaLocation_read[0] = new char[location.length() + 1];
             strcpy(attr_GeographicaLocation_read[0], location.c_str());
 
-            std::stringstream ss;
-            ss << "{\"DateReferenceEvent\": \"" << dateRef << "\",\"Latitude\": " << latitude
-               << ",\"Longitude\": " << longitude << ",\"Depth\": " << depth << ",\"ReportedMagnitudes\": " << magnitude
-               << ",\"Location\": " << location << "}";
-            //*attr_JsonTrans_read = Tango::string_dup(ss.str().c_str());
-            // DeviceImpl::push_archive_event("JsonTrans");
-
+            json j = { { "DateReferenceEvent", dateRef },
+                       { "Latitude", latitude },
+                       { "Longitude", longitude },
+                       { "Depth", depth },
+                       { "ReportedMagnitudes", magnitude },
+                       { "Location", location } };
+            string jsonStr = j.dump();
+            attr_JsonTrans_read[0] = new char[jsonStr.length() + 1];
+            strcpy(attr_JsonTrans_read[0], jsonStr.c_str());
+            
             allEventInformation->erase(allEventInformation->begin());
-
+            cout << "json = " << jsonStr << "\n";
             cout << "Events size = " << to_string(allEventInformation->size()) << "\n";
 
             DeviceImpl::push_archive_event("GeographicaLocation", attr_GeographicaLocation_read, 1, 0, false);
@@ -472,6 +475,7 @@ void EarthQuakeGenerator::next_event()
             DeviceImpl::push_archive_event("Latitude", attr_Latitude_read, 1, 0, false);
             DeviceImpl::push_archive_event("Longitude", attr_Longitude_read, 1, 0, false);
             DeviceImpl::push_archive_event("Depth", attr_Depth_read, 1, 0, false);
+            DeviceImpl::push_archive_event("JsonTrans", attr_JsonTrans_read, 1, 0, false);
         }
     }
     catch (int e)

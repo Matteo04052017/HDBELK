@@ -284,7 +284,7 @@ void HdbPPELK::insert_Attr(Tango::EventData* data, HdbEventDataType ev_data_type
         LOG(Error) << error_desc << "->SaveAttributeEventData ERROR! Json:\n" << _DAL->GetErrors() << endl;
         Tango::Except::throw_exception(EXCEPTION_TYPE_SAVEEVENTDATA, error_desc.str().c_str(), __func__);
     }
-    
+
     Document doc(attr_conf, attr_event_data, asctime(tms));
     if (!_DAL->SaveDocument(doc)) {
         stringstream error_desc;
@@ -614,7 +614,14 @@ json HdbPPELK::extract_read(Tango::EventData* data, HdbEventDataType ev_data_typ
         break;
     case Tango::DEV_STRING:
         if (data->attr_value->extract_read(vString)) {
-            result["vString"] = vString;
+            // try to parse as json??
+            if (json::accept(vString[0])) {
+                json j3 = json::parse(vString[0]);
+                result["vJsonString"] = j3;
+            } else {
+                result["vString"] = vString;
+            }
+            // result["vString"] = vString;
             extract_success = true;
         }
         break;
@@ -743,7 +750,14 @@ json HdbPPELK::extract_set(Tango::EventData* data, HdbEventDataType ev_data_type
         break;
     case Tango::DEV_STRING:
         if (data->attr_value->extract_set(vString)) {
-            result["vString"] = vString;
+            // try to parse as json??
+            if (json::accept(vString[0])) {
+                json j3 = json::parse(vString[0]);
+                result["vJsonString"] = j3;
+            } else {
+                result["vString"] = vString;
+            }
+            // result["vString"] = vString;
             extract_success = true;
         }
         break;

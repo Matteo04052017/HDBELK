@@ -310,7 +310,7 @@ bool DAL::SaveAttributeEventData(AttributeEventData& p_attr_event_data)
         if (!p_attr_event_data.GetID().empty()) {
             throw string("The data object 'AttributeEventData' should not be updated in the DB");
         }
-
+        LOG(Debug) << "Inserting AttributeEventData: " << p_attr_event_data.ToJson() << endl;
         string out_id;
         if (!InsertElastic(ELK_INDEX, ELK_TYPE, p_attr_event_data.ToJson(), out_id))
             return false;

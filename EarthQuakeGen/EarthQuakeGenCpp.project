@@ -28,6 +28,7 @@
     <File Name="EarthQuakeGeneratorClass.h"/>
     <File Name="EarthQuakeGeneratorStateMachine.cpp"/>
     <File Name="main.cpp"/>
+    <File Name="json/json.hpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
