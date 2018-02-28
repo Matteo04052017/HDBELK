@@ -182,14 +182,11 @@ void AmicaLogger::init_device()
     ifstream infile;
     infile.open("/home/osboxes/tango-dev/AmicaGen/MTME_seq.dat");
     while (std::getline(infile, tmpString)) {
-        if (tmpString.find("9999") == 0)
-            startLineStr = tmpString;
-        if (tmpString.length() < 70) {
-            ss << startLineStr << "     " << firstLineStr << "     " << tmpString;
+        if (tmpString.find("    9999") == 0 && ss.str().length() != 0) {
             allEventInformation->push_back(ss.str());
             ss.str(std::string());
-        } else
-            firstLineStr = tmpString;
+        }
+        ss << tmpString;
     }
     infile.close();
 
@@ -488,10 +485,14 @@ void AmicaLogger::next()
 
             int i = 0;
             while (std::getline(ss, token, ' ')) {
-                //if (i == 0) // 9999
+                if (token.length() == 0)
+                    continue;
+                if (i > 13)
+                    break;
+                    
                 if (i == 1)
                     *attr_Day_read = stoi(token);
-                //if (i == 2) // line number
+                // if (i == 2) // line number
                 if (i == 3)
                     *attr_Hour_read = stoi(token);
                 if (i == 4)
