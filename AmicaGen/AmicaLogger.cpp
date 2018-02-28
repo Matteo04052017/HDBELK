@@ -519,7 +519,7 @@ void AmicaLogger::next()
                     *attr_Day_read = stoi(token);
                 // if (i == 2) // line number
                 if (i == 3)
-                    *attr_Hour_read = stoi(token);
+                    *attr_Hour_read = stod(token);
                 if (i == 4)
                     *attr_LineVoltage1_read = stod(token);
                 if (i == 5)
