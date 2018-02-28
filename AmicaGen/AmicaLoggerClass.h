@@ -216,6 +216,19 @@ public:
 		{return (static_cast<AmicaLogger *>(dev))->is_CurrentNeutro_allowed(ty);}
 };
 
+//	Attribute JsonTrans class definition
+class JsonTransAttrib: public Tango::Attr
+{
+public:
+	JsonTransAttrib():Attr("JsonTrans",
+			Tango::DEV_STRING, Tango::READ) {};
+	~JsonTransAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<AmicaLogger *>(dev))->read_JsonTrans(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<AmicaLogger *>(dev))->is_JsonTrans_allowed(ty);}
+};
+
 
 //=========================================
 //	Define classes for commands

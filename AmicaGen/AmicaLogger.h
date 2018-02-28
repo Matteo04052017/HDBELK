@@ -41,6 +41,8 @@
 #include <tango.h>
 
 /*----- PROTECTED REGION END -----*/	//	AmicaLogger.h
+#include "json/json.hpp"
+using json = nlohmann::json;
 
 /**
  *  AmicaLogger class description:
@@ -81,6 +83,7 @@ public:
 	Tango::DevDouble	*attr_LineVoltage2_read;
 	Tango::DevDouble	*attr_LineVoltage3_read;
 	Tango::DevDouble	*attr_CurrentNeutro_read;
+	Tango::DevString	*attr_JsonTrans_read;
 
 //	Constructors and destructors
 public:
@@ -246,6 +249,15 @@ public:
  */
 	virtual void read_CurrentNeutro(Tango::Attribute &attr);
 	virtual bool is_CurrentNeutro_allowed(Tango::AttReqType type);
+/**
+ *	Attribute JsonTrans related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevString
+ *	Attr type:	Scalar
+ */
+	virtual void read_JsonTrans(Tango::Attribute &attr);
+	virtual bool is_JsonTrans_allowed(Tango::AttReqType type);
 
 
 	//--------------------------------------------------------

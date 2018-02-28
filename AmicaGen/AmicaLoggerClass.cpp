@@ -749,6 +749,31 @@ void AmicaLoggerClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	currentneutro->set_archive_event(true, true);
 	att_list.push_back(currentneutro);
 
+	//	Attribute : JsonTrans
+	JsonTransAttrib	*jsontrans = new JsonTransAttrib();
+	Tango::UserDefaultAttrProp	jsontrans_prop;
+	//	description	not set for JsonTrans
+	//	label	not set for JsonTrans
+	//	unit	not set for JsonTrans
+	//	standard_unit	not set for JsonTrans
+	//	display_unit	not set for JsonTrans
+	//	format	not set for JsonTrans
+	//	max_value	not set for JsonTrans
+	//	min_value	not set for JsonTrans
+	//	max_alarm	not set for JsonTrans
+	//	min_alarm	not set for JsonTrans
+	//	max_warning	not set for JsonTrans
+	//	min_warning	not set for JsonTrans
+	//	delta_t	not set for JsonTrans
+	//	delta_val	not set for JsonTrans
+	
+	jsontrans->set_default_properties(jsontrans_prop);
+	//	Not Polled
+	jsontrans->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	jsontrans->set_archive_event(true, false);
+	att_list.push_back(jsontrans);
+
 
 	//	Create a list of static attributes
 	create_static_attribute_list(get_class_attr()->get_attr_list());

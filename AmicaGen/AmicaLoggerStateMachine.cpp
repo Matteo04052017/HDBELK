@@ -243,6 +243,22 @@ bool AmicaLogger::is_CurrentNeutro_allowed(TANGO_UNUSED(Tango::AttReqType type))
 	return true;
 }
 
+//--------------------------------------------------------
+/**
+ *	Method      : AmicaLogger::is_JsonTrans_allowed()
+ *	Description : Execution allowed for JsonTrans attribute
+ */
+//--------------------------------------------------------
+bool AmicaLogger::is_JsonTrans_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for JsonTrans attribute in read access.
+	/*----- PROTECTED REGION ID(AmicaLogger::JsonTransStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	AmicaLogger::JsonTransStateAllowed_READ
+	return true;
+}
+
 
 //=================================================
 //		Commands Allowed Methods
