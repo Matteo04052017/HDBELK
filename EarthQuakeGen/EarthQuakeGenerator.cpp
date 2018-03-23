@@ -74,6 +74,7 @@ using namespace std;
 //  GeographicaLocation  |  Tango::DevString	Scalar
 //  JsonTrans            |  Tango::DevString	Scalar
 //  NdkFileName          |  Tango::DevString	Scalar
+//  archiveValue         |  Tango::DevString	Scalar
 //================================================================
 
 namespace EarthQuakeGenerator_ns
@@ -139,6 +140,7 @@ void EarthQuakeGenerator::delete_device()
     delete[] attr_GeographicaLocation_read;
     delete[] attr_JsonTrans_read;
     delete[] attr_NdkFileName_read;
+    delete[] attr_archiveValue_read;
 }
 
 //--------------------------------------------------------
@@ -166,6 +168,7 @@ void EarthQuakeGenerator::init_device()
     attr_GeographicaLocation_read = new Tango::DevString[1];
     attr_JsonTrans_read = new Tango::DevString[1];
     attr_NdkFileName_read = new Tango::DevString[1];
+    attr_archiveValue_read = new Tango::DevString[1];
     /*----- PROTECTED REGION ID(EarthQuakeGenerator::init_device) ENABLED START -----*/
     //	Initialize device
     allEventInformation = new vector<string>();
@@ -395,6 +398,24 @@ void EarthQuakeGenerator::write_NdkFileName(Tango::WAttribute& attr)
 
     /*----- PROTECTED REGION END -----*/ //	EarthQuakeGenerator::write_NdkFileName
 }
+//--------------------------------------------------------
+/**
+ *	Read attribute archiveValue related method
+ *	Description:
+ *
+ *	Data type:	Tango::DevString
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void EarthQuakeGenerator::read_archiveValue(Tango::Attribute& attr)
+{
+    DEBUG_STREAM << "EarthQuakeGenerator::read_archiveValue(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(EarthQuakeGenerator::read_archiveValue) ENABLED START -----*/
+    //	Set the attribute value
+    attr.set_value(attr_archiveValue_read);
+
+    /*----- PROTECTED REGION END -----*/ //	EarthQuakeGenerator::read_archiveValue
+}
 
 //--------------------------------------------------------
 /**
@@ -430,8 +451,10 @@ void EarthQuakeGenerator::next_event()
             string tmpString = allEventInformation->front();
             cout << tmpString << "\n";
             string dateRef = tmpString.substr(5, 21);
+            string strLat = tmpString.substr(27, 7);
+            string strLon = tmpString.substr(34, 7);
             float latitude = stof(tmpString.substr(27, 7).c_str());
-            float longitude = stof(tmpString.substr(34, 6).c_str());
+            float longitude = stof(tmpString.substr(34, 7).c_str());
             float depth = stof(tmpString.substr(42, 4).c_str());
             string magnitude = tmpString.substr(48, 3);
             string location = tmpString.substr(56, tmpString.size());
@@ -455,16 +478,26 @@ void EarthQuakeGenerator::next_event()
             attr_GeographicaLocation_read[0] = new char[location.length() + 1];
             strcpy(attr_GeographicaLocation_read[0], location.c_str());
 
+            /*float lat = roundf(stof(strLat) * 100) / 100.0;
+
+            float lon = roundf(stof(strLon) * 100) / 100.0;*/
+
+            std::stringstream strGeoPoint;
+            strGeoPoint << strLat << "," << strLon;
+
             json j = { { "DateReferenceEvent", dateRef },
-                       { "Latitude", latitude },
-                       { "Longitude", longitude },
+                       { "GeoPoint", strGeoPoint.str() /*{ lat, lon }*/ },
                        { "Depth", depth },
                        { "ReportedMagnitudes", magnitude },
                        { "Location", location } };
+
             string jsonStr = j.dump();
             attr_JsonTrans_read[0] = new char[jsonStr.length() + 1];
             strcpy(attr_JsonTrans_read[0], jsonStr.c_str());
-            
+
+            attr_archiveValue_read[0] = new char[jsonStr.length() + 1];
+            strcpy(attr_archiveValue_read[0], jsonStr.c_str());
+
             allEventInformation->erase(allEventInformation->begin());
             cout << "json = " << jsonStr << "\n";
             cout << "Events size = " << to_string(allEventInformation->size()) << "\n";
@@ -476,6 +509,7 @@ void EarthQuakeGenerator::next_event()
             DeviceImpl::push_archive_event("Longitude", attr_Longitude_read, 1, 0, false);
             DeviceImpl::push_archive_event("Depth", attr_Depth_read, 1, 0, false);
             DeviceImpl::push_archive_event("JsonTrans", attr_JsonTrans_read, 1, 0, false);
+            DeviceImpl::push_archive_event("archiveValue", attr_JsonTrans_read, 1, 0, false);
         }
     }
     catch (int e)

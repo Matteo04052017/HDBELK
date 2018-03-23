@@ -166,6 +166,19 @@ public:
 		{return (static_cast<EarthQuakeGenerator *>(dev))->is_NdkFileName_allowed(ty);}
 };
 
+//	Attribute archiveValue class definition
+class archiveValueAttrib: public Tango::Attr
+{
+public:
+	archiveValueAttrib():Attr("archiveValue",
+			Tango::DEV_STRING, Tango::READ) {};
+	~archiveValueAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<EarthQuakeGenerator *>(dev))->read_archiveValue(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<EarthQuakeGenerator *>(dev))->is_archiveValue_allowed(ty);}
+};
+
 
 //=========================================
 //	Define classes for commands

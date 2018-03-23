@@ -183,6 +183,22 @@ bool EarthQuakeGenerator::is_NdkFileName_allowed(TANGO_UNUSED(Tango::AttReqType 
 	return true;
 }
 
+//--------------------------------------------------------
+/**
+ *	Method      : EarthQuakeGenerator::is_archiveValue_allowed()
+ *	Description : Execution allowed for archiveValue attribute
+ */
+//--------------------------------------------------------
+bool EarthQuakeGenerator::is_archiveValue_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for archiveValue attribute in read access.
+	/*----- PROTECTED REGION ID(EarthQuakeGenerator::archiveValueStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	EarthQuakeGenerator::archiveValueStateAllowed_READ
+	return true;
+}
+
 
 //=================================================
 //		Commands Allowed Methods

@@ -666,6 +666,30 @@ void EarthQuakeGeneratorClass::attribute_factory(vector<Tango::Attr *> &att_list
 	//	Not Memorized
 	att_list.push_back(ndkfilename);
 
+	//	Attribute : archiveValue
+	archiveValueAttrib	*archivevalue = new archiveValueAttrib();
+	Tango::UserDefaultAttrProp	archivevalue_prop;
+	//	description	not set for archiveValue
+	//	label	not set for archiveValue
+	//	unit	not set for archiveValue
+	//	standard_unit	not set for archiveValue
+	//	display_unit	not set for archiveValue
+	//	format	not set for archiveValue
+	//	max_value	not set for archiveValue
+	//	min_value	not set for archiveValue
+	//	max_alarm	not set for archiveValue
+	//	min_alarm	not set for archiveValue
+	//	max_warning	not set for archiveValue
+	//	min_warning	not set for archiveValue
+	//	delta_t	not set for archiveValue
+	//	delta_val	not set for archiveValue
+	
+	archivevalue->set_default_properties(archivevalue_prop);
+	archivevalue->set_polling_period(1000);
+	archivevalue->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(archivevalue);
+
 
 	//	Create a list of static attributes
 	create_static_attribute_list(get_class_attr()->get_attr_list());

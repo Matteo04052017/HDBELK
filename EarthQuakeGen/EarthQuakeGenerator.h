@@ -82,6 +82,7 @@ public:
 	Tango::DevString	*attr_GeographicaLocation_read;
 	Tango::DevString	*attr_JsonTrans_read;
 	Tango::DevString	*attr_NdkFileName_read;
+	Tango::DevString	*attr_archiveValue_read;
 
 //	Constructors and destructors
 public:
@@ -219,6 +220,15 @@ public:
 	virtual void read_NdkFileName(Tango::Attribute &attr);
 	virtual void write_NdkFileName(Tango::WAttribute &attr);
 	virtual bool is_NdkFileName_allowed(Tango::AttReqType type);
+/**
+ *	Attribute archiveValue related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevString
+ *	Attr type:	Scalar
+ */
+	virtual void read_archiveValue(Tango::Attribute &attr);
+	virtual bool is_archiveValue_allowed(Tango::AttReqType type);
 
 
 	//--------------------------------------------------------
