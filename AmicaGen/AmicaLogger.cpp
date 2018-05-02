@@ -43,7 +43,7 @@ static const char* RcsId = "$Id:  $";
 #include <AmicaLogger.h>
 #include <AmicaLoggerClass.h>
 
-/*----- PROTECTED REGION END -----*/	//	AmicaLogger.cpp
+/*----- PROTECTED REGION END -----*/ //	AmicaLogger.cpp
 
 /**
  *  AmicaLogger class description:
@@ -85,7 +85,7 @@ namespace AmicaLogger_ns
 
 //	static initializations
 
-/*----- PROTECTED REGION END -----*/	//	AmicaLogger::namespace_starting
+/*----- PROTECTED REGION END -----*/ //	AmicaLogger::namespace_starting
 
 //--------------------------------------------------------
 /**
@@ -94,31 +94,28 @@ namespace AmicaLogger_ns
  *                implementing the classAmicaLogger
  */
 //--------------------------------------------------------
-AmicaLogger::AmicaLogger(Tango::DeviceClass *cl, string &s)
- : TANGO_BASE_CLASS(cl, s.c_str())
+AmicaLogger::AmicaLogger(Tango::DeviceClass* cl, string& s) : TANGO_BASE_CLASS(cl, s.c_str())
 {
-	/*----- PROTECTED REGION ID(AmicaLogger::constructor_1) ENABLED START -----*/
+    /*----- PROTECTED REGION ID(AmicaLogger::constructor_1) ENABLED START -----*/
     init_device();
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::constructor_1
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::constructor_1
 }
 //--------------------------------------------------------
-AmicaLogger::AmicaLogger(Tango::DeviceClass *cl, const char *s)
- : TANGO_BASE_CLASS(cl, s)
+AmicaLogger::AmicaLogger(Tango::DeviceClass* cl, const char* s) : TANGO_BASE_CLASS(cl, s)
 {
-	/*----- PROTECTED REGION ID(AmicaLogger::constructor_2) ENABLED START -----*/
+    /*----- PROTECTED REGION ID(AmicaLogger::constructor_2) ENABLED START -----*/
     init_device();
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::constructor_2
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::constructor_2
 }
 //--------------------------------------------------------
-AmicaLogger::AmicaLogger(Tango::DeviceClass *cl, const char *s, const char *d)
- : TANGO_BASE_CLASS(cl, s, d)
+AmicaLogger::AmicaLogger(Tango::DeviceClass* cl, const char* s, const char* d) : TANGO_BASE_CLASS(cl, s, d)
 {
-	/*----- PROTECTED REGION ID(AmicaLogger::constructor_3) ENABLED START -----*/
+    /*----- PROTECTED REGION ID(AmicaLogger::constructor_3) ENABLED START -----*/
     init_device();
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::constructor_3
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::constructor_3
 }
 
 //--------------------------------------------------------
@@ -129,25 +126,25 @@ AmicaLogger::AmicaLogger(Tango::DeviceClass *cl, const char *s, const char *d)
 //--------------------------------------------------------
 void AmicaLogger::delete_device()
 {
-	DEBUG_STREAM << "AmicaLogger::delete_device() " << device_name << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::delete_device) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::delete_device() " << device_name << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::delete_device) ENABLED START -----*/
 
     //	Delete device allocated objects
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::delete_device
-	delete[] attr_ActivePower1_read;
-	delete[] attr_ActivePower2_read;
-	delete[] attr_ActivePower3_read;
-	delete[] attr_CurrentVoltage1_read;
-	delete[] attr_CurrentVoltage2_read;
-	delete[] attr_CurrentVoltage3_read;
-	delete[] attr_Day_read;
-	delete[] attr_Hour_read;
-	delete[] attr_LineVoltage1_read;
-	delete[] attr_LineVoltage2_read;
-	delete[] attr_LineVoltage3_read;
-	delete[] attr_CurrentNeutro_read;
-	delete[] attr_JsonTrans_read;
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::delete_device
+    delete[] attr_ActivePower1_read;
+    delete[] attr_ActivePower2_read;
+    delete[] attr_ActivePower3_read;
+    delete[] attr_CurrentVoltage1_read;
+    delete[] attr_CurrentVoltage2_read;
+    delete[] attr_CurrentVoltage3_read;
+    delete[] attr_Day_read;
+    delete[] attr_Hour_read;
+    delete[] attr_LineVoltage1_read;
+    delete[] attr_LineVoltage2_read;
+    delete[] attr_LineVoltage3_read;
+    delete[] attr_CurrentNeutro_read;
+    delete[] attr_JsonTrans_read;
 }
 
 //--------------------------------------------------------
@@ -158,49 +155,65 @@ void AmicaLogger::delete_device()
 //--------------------------------------------------------
 void AmicaLogger::init_device()
 {
-	DEBUG_STREAM << "AmicaLogger::init_device() create device " << device_name << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::init_device_before) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::init_device() create device " << device_name << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::init_device_before) ENABLED START -----*/
 
     //	Initialization before get_device_property() call
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::init_device_before
-	
-	//	No device property to be read from database
-	
-	attr_ActivePower1_read = new Tango::DevDouble[1];
-	attr_ActivePower2_read = new Tango::DevDouble[1];
-	attr_ActivePower3_read = new Tango::DevDouble[1];
-	attr_CurrentVoltage1_read = new Tango::DevDouble[1];
-	attr_CurrentVoltage2_read = new Tango::DevDouble[1];
-	attr_CurrentVoltage3_read = new Tango::DevDouble[1];
-	attr_Day_read = new Tango::DevShort[1];
-	attr_Hour_read = new Tango::DevDouble[1];
-	attr_LineVoltage1_read = new Tango::DevDouble[1];
-	attr_LineVoltage2_read = new Tango::DevDouble[1];
-	attr_LineVoltage3_read = new Tango::DevDouble[1];
-	attr_CurrentNeutro_read = new Tango::DevDouble[1];
-	attr_JsonTrans_read = new Tango::DevString[1];
-	/*----- PROTECTED REGION ID(AmicaLogger::init_device) ENABLED START -----*/
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::init_device_before
+
+    //	No device property to be read from database
+
+    attr_ActivePower1_read = new Tango::DevDouble[1];
+    attr_ActivePower2_read = new Tango::DevDouble[1];
+    attr_ActivePower3_read = new Tango::DevDouble[1];
+    attr_CurrentVoltage1_read = new Tango::DevDouble[1];
+    attr_CurrentVoltage2_read = new Tango::DevDouble[1];
+    attr_CurrentVoltage3_read = new Tango::DevDouble[1];
+    attr_Day_read = new Tango::DevShort[1];
+    attr_Hour_read = new Tango::DevDouble[1];
+    attr_LineVoltage1_read = new Tango::DevDouble[1];
+    attr_LineVoltage2_read = new Tango::DevDouble[1];
+    attr_LineVoltage3_read = new Tango::DevDouble[1];
+    attr_CurrentNeutro_read = new Tango::DevDouble[1];
+    attr_JsonTrans_read = new Tango::DevString[1];
+    /*----- PROTECTED REGION ID(AmicaLogger::init_device) ENABLED START -----*/
     //	Initialize device
     allEventInformation = new vector<string>();
-    string startLineStr, firstLineStr, tmpString;
+    string startLineStr, toAdd, tmpString;
     std::stringstream ss;
     ifstream infile;
+    int j = 0;
     infile.open("/home/osboxes/tango-dev/AmicaGen/MTME_seq.dat");
     while (std::getline(infile, tmpString)) {
-        if (tmpString.find("    9999") == 0 && ss.str().length() != 0) {
-            allEventInformation->push_back(ss.str());
+        if (tmpString.find("9999") != std::string::npos) {
+            startLineStr = tmpString;
+            j = 0;
             ss.str(std::string());
+            continue; // scarto riga iniziale
+        } else {
+            if (j > 1) {
+                // azzero j
+                j = 0;
+                // aggiungo il dato
+                toAdd = ss.str();
+                ss.str(std::string());
+                ss << startLineStr.substr(0, startLineStr.size() - 2) << " " << toAdd;
+                // cout << ss.str();
+                allEventInformation->push_back(ss.str());
+                // pulisco il buffer
+                ss.str(std::string());
+            }
+            ss << tmpString.substr(0, tmpString.size() - 2) << " ";
+            j++; // ogni 2 devo azzerare
         }
-        ss << tmpString;
     }
     infile.close();
 
     cout << "Events size = " << to_string(allEventInformation->size()) << "\n";
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::init_device
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::init_device
 }
-
 
 //--------------------------------------------------------
 /**
@@ -210,12 +223,12 @@ void AmicaLogger::init_device()
 //--------------------------------------------------------
 void AmicaLogger::always_executed_hook()
 {
-	DEBUG_STREAM << "AmicaLogger::always_executed_hook()  " << device_name << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::always_executed_hook) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::always_executed_hook()  " << device_name << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::always_executed_hook) ENABLED START -----*/
 
     //	code always executed before all requests
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::always_executed_hook
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::always_executed_hook
 }
 
 //--------------------------------------------------------
@@ -224,248 +237,248 @@ void AmicaLogger::always_executed_hook()
  *	Description : Hardware acquisition for attributes
  */
 //--------------------------------------------------------
-void AmicaLogger::read_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
+void AmicaLogger::read_attr_hardware(TANGO_UNUSED(vector<long>& attr_list))
 {
-	DEBUG_STREAM << "AmicaLogger::read_attr_hardware(vector<long> &attr_list) entering... " << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::read_attr_hardware) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::read_attr_hardware(vector<long> &attr_list) entering... " << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::read_attr_hardware) ENABLED START -----*/
 
     //	Add your own code
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::read_attr_hardware
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::read_attr_hardware
 }
 
 //--------------------------------------------------------
 /**
  *	Read attribute ActivePower1 related method
- *	Description: 
+ *	Description:
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
-void AmicaLogger::read_ActivePower1(Tango::Attribute &attr)
+void AmicaLogger::read_ActivePower1(Tango::Attribute& attr)
 {
-	DEBUG_STREAM << "AmicaLogger::read_ActivePower1(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::read_ActivePower1) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::read_ActivePower1(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::read_ActivePower1) ENABLED START -----*/
     //	Set the attribute value
     attr.set_value(attr_ActivePower1_read);
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::read_ActivePower1
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::read_ActivePower1
 }
 //--------------------------------------------------------
 /**
  *	Read attribute ActivePower2 related method
- *	Description: 
+ *	Description:
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
-void AmicaLogger::read_ActivePower2(Tango::Attribute &attr)
+void AmicaLogger::read_ActivePower2(Tango::Attribute& attr)
 {
-	DEBUG_STREAM << "AmicaLogger::read_ActivePower2(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::read_ActivePower2) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::read_ActivePower2(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::read_ActivePower2) ENABLED START -----*/
     //	Set the attribute value
     attr.set_value(attr_ActivePower2_read);
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::read_ActivePower2
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::read_ActivePower2
 }
 //--------------------------------------------------------
 /**
  *	Read attribute ActivePower3 related method
- *	Description: 
+ *	Description:
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
-void AmicaLogger::read_ActivePower3(Tango::Attribute &attr)
+void AmicaLogger::read_ActivePower3(Tango::Attribute& attr)
 {
-	DEBUG_STREAM << "AmicaLogger::read_ActivePower3(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::read_ActivePower3) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::read_ActivePower3(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::read_ActivePower3) ENABLED START -----*/
     //	Set the attribute value
     attr.set_value(attr_ActivePower3_read);
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::read_ActivePower3
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::read_ActivePower3
 }
 //--------------------------------------------------------
 /**
  *	Read attribute CurrentVoltage1 related method
- *	Description: 
+ *	Description:
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
-void AmicaLogger::read_CurrentVoltage1(Tango::Attribute &attr)
+void AmicaLogger::read_CurrentVoltage1(Tango::Attribute& attr)
 {
-	DEBUG_STREAM << "AmicaLogger::read_CurrentVoltage1(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::read_CurrentVoltage1) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::read_CurrentVoltage1(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::read_CurrentVoltage1) ENABLED START -----*/
     //	Set the attribute value
     attr.set_value(attr_CurrentVoltage1_read);
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::read_CurrentVoltage1
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::read_CurrentVoltage1
 }
 //--------------------------------------------------------
 /**
  *	Read attribute CurrentVoltage2 related method
- *	Description: 
+ *	Description:
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
-void AmicaLogger::read_CurrentVoltage2(Tango::Attribute &attr)
+void AmicaLogger::read_CurrentVoltage2(Tango::Attribute& attr)
 {
-	DEBUG_STREAM << "AmicaLogger::read_CurrentVoltage2(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::read_CurrentVoltage2) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::read_CurrentVoltage2(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::read_CurrentVoltage2) ENABLED START -----*/
     //	Set the attribute value
     attr.set_value(attr_CurrentVoltage2_read);
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::read_CurrentVoltage2
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::read_CurrentVoltage2
 }
 //--------------------------------------------------------
 /**
  *	Read attribute CurrentVoltage3 related method
- *	Description: 
+ *	Description:
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
-void AmicaLogger::read_CurrentVoltage3(Tango::Attribute &attr)
+void AmicaLogger::read_CurrentVoltage3(Tango::Attribute& attr)
 {
-	DEBUG_STREAM << "AmicaLogger::read_CurrentVoltage3(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::read_CurrentVoltage3) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::read_CurrentVoltage3(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::read_CurrentVoltage3) ENABLED START -----*/
     //	Set the attribute value
     attr.set_value(attr_CurrentVoltage3_read);
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::read_CurrentVoltage3
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::read_CurrentVoltage3
 }
 //--------------------------------------------------------
 /**
  *	Read attribute Day related method
- *	Description: 
+ *	Description:
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
-void AmicaLogger::read_Day(Tango::Attribute &attr)
+void AmicaLogger::read_Day(Tango::Attribute& attr)
 {
-	DEBUG_STREAM << "AmicaLogger::read_Day(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::read_Day) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::read_Day(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::read_Day) ENABLED START -----*/
     //	Set the attribute value
     attr.set_value(attr_Day_read);
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::read_Day
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::read_Day
 }
 //--------------------------------------------------------
 /**
  *	Read attribute Hour related method
- *	Description: 
+ *	Description:
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
-void AmicaLogger::read_Hour(Tango::Attribute &attr)
+void AmicaLogger::read_Hour(Tango::Attribute& attr)
 {
-	DEBUG_STREAM << "AmicaLogger::read_Hour(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::read_Hour) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::read_Hour(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::read_Hour) ENABLED START -----*/
     //	Set the attribute value
     attr.set_value(attr_Hour_read);
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::read_Hour
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::read_Hour
 }
 //--------------------------------------------------------
 /**
  *	Read attribute LineVoltage1 related method
- *	Description: 
+ *	Description:
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
-void AmicaLogger::read_LineVoltage1(Tango::Attribute &attr)
+void AmicaLogger::read_LineVoltage1(Tango::Attribute& attr)
 {
-	DEBUG_STREAM << "AmicaLogger::read_LineVoltage1(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::read_LineVoltage1) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::read_LineVoltage1(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::read_LineVoltage1) ENABLED START -----*/
     //	Set the attribute value
     attr.set_value(attr_LineVoltage1_read);
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::read_LineVoltage1
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::read_LineVoltage1
 }
 //--------------------------------------------------------
 /**
  *	Read attribute LineVoltage2 related method
- *	Description: 
+ *	Description:
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
-void AmicaLogger::read_LineVoltage2(Tango::Attribute &attr)
+void AmicaLogger::read_LineVoltage2(Tango::Attribute& attr)
 {
-	DEBUG_STREAM << "AmicaLogger::read_LineVoltage2(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::read_LineVoltage2) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::read_LineVoltage2(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::read_LineVoltage2) ENABLED START -----*/
     //	Set the attribute value
     attr.set_value(attr_LineVoltage2_read);
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::read_LineVoltage2
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::read_LineVoltage2
 }
 //--------------------------------------------------------
 /**
  *	Read attribute LineVoltage3 related method
- *	Description: 
+ *	Description:
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
-void AmicaLogger::read_LineVoltage3(Tango::Attribute &attr)
+void AmicaLogger::read_LineVoltage3(Tango::Attribute& attr)
 {
-	DEBUG_STREAM << "AmicaLogger::read_LineVoltage3(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::read_LineVoltage3) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::read_LineVoltage3(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::read_LineVoltage3) ENABLED START -----*/
     //	Set the attribute value
     attr.set_value(attr_LineVoltage3_read);
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::read_LineVoltage3
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::read_LineVoltage3
 }
 //--------------------------------------------------------
 /**
  *	Read attribute CurrentNeutro related method
- *	Description: 
+ *	Description:
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
-void AmicaLogger::read_CurrentNeutro(Tango::Attribute &attr)
+void AmicaLogger::read_CurrentNeutro(Tango::Attribute& attr)
 {
-	DEBUG_STREAM << "AmicaLogger::read_CurrentNeutro(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::read_CurrentNeutro) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::read_CurrentNeutro(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::read_CurrentNeutro) ENABLED START -----*/
     //	Set the attribute value
     attr.set_value(attr_CurrentVoltage3_read);
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::read_CurrentNeutro
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::read_CurrentNeutro
 }
 //--------------------------------------------------------
 /**
  *	Read attribute JsonTrans related method
- *	Description: 
+ *	Description:
  *
  *	Data type:	Tango::DevString
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
-void AmicaLogger::read_JsonTrans(Tango::Attribute &attr)
+void AmicaLogger::read_JsonTrans(Tango::Attribute& attr)
 {
-	DEBUG_STREAM << "AmicaLogger::read_JsonTrans(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::read_JsonTrans) ENABLED START -----*/
-	//	Set the attribute value
-	attr.set_value(attr_JsonTrans_read);
-	
-	/*----- PROTECTED REGION END -----*/	//	AmicaLogger::read_JsonTrans
+    DEBUG_STREAM << "AmicaLogger::read_JsonTrans(Tango::Attribute &attr) entering... " << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::read_JsonTrans) ENABLED START -----*/
+    //	Set the attribute value
+    attr.set_value(attr_JsonTrans_read);
+
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::read_JsonTrans
 }
 
 //--------------------------------------------------------
@@ -477,24 +490,24 @@ void AmicaLogger::read_JsonTrans(Tango::Attribute &attr)
 //--------------------------------------------------------
 void AmicaLogger::add_dynamic_attributes()
 {
-	/*----- PROTECTED REGION ID(AmicaLogger::add_dynamic_attributes) ENABLED START -----*/
+    /*----- PROTECTED REGION ID(AmicaLogger::add_dynamic_attributes) ENABLED START -----*/
 
     //	Add your own code to create and add dynamic attributes if any
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::add_dynamic_attributes
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::add_dynamic_attributes
 }
 
 //--------------------------------------------------------
 /**
  *	Command Next related method
- *	Description: 
+ *	Description:
  *
  */
 //--------------------------------------------------------
 void AmicaLogger::next()
 {
-	DEBUG_STREAM << "AmicaLogger::Next()  - " << device_name << endl;
-	/*----- PROTECTED REGION ID(AmicaLogger::next) ENABLED START -----*/
+    DEBUG_STREAM << "AmicaLogger::Next()  - " << device_name << endl;
+    /*----- PROTECTED REGION ID(AmicaLogger::next) ENABLED START -----*/
 
     //	Add your own code
 
@@ -512,9 +525,7 @@ void AmicaLogger::next()
             while (std::getline(ss, token, ' ')) {
                 if (token.length() == 0)
                     continue;
-                if (i > 13)
-                    break;
-                    
+
                 if (i == 1)
                     *attr_Day_read = stoi(token);
                 // if (i == 2) // line number
@@ -540,10 +551,48 @@ void AmicaLogger::next()
                     *attr_ActivePower3_read = stod(token);
                 if (i == 13)
                     *attr_CurrentNeutro_read = stod(token);
+
                 i++;
+                if (i > 13) {
+
+                    json j = { { "Day", *attr_Day_read },
+                               { "Hour", *attr_Hour_read },
+                               { "LineVoltage1", *attr_LineVoltage1_read },
+                               { "LineVoltage2", *attr_LineVoltage2_read },
+                               { "LineVoltage3", *attr_LineVoltage3_read },
+                               { "CurrentVoltage1", *attr_CurrentVoltage1_read },
+                               { "CurrentVoltage2", *attr_CurrentVoltage2_read },
+                               { "CurrentVoltage3", *attr_CurrentVoltage3_read },
+                               { "ActivePower1", *attr_ActivePower1_read },
+                               { "ActivePower2", *attr_ActivePower2_read },
+                               { "ActivePower3", *attr_ActivePower3_read },
+                               { "CurrentNeutro", *attr_CurrentNeutro_read } };
+                    string jsonStr = j.dump();
+                    attr_JsonTrans_read[0] = new char[jsonStr.length() + 1];
+                    strcpy(attr_JsonTrans_read[0], jsonStr.c_str());
+
+                    allEventInformation->erase(allEventInformation->begin());
+                    cout << "Events size = " << to_string(allEventInformation->size()) << "\n";
+
+                    DeviceImpl::push_archive_event("Day", attr_Day_read, 1, 0, false);
+                    DeviceImpl::push_archive_event("Hour", attr_Hour_read, 1, 0, false);
+                    DeviceImpl::push_archive_event("LineVoltage1", attr_LineVoltage1_read, 1, 0, false);
+                    DeviceImpl::push_archive_event("LineVoltage2", attr_LineVoltage2_read, 1, 0, false);
+                    DeviceImpl::push_archive_event("LineVoltage3", attr_LineVoltage3_read, 1, 0, false);
+                    DeviceImpl::push_archive_event("CurrentVoltage1", attr_CurrentVoltage1_read, 1, 0, false);
+                    DeviceImpl::push_archive_event("CurrentVoltage2", attr_CurrentVoltage2_read, 1, 0, false);
+                    DeviceImpl::push_archive_event("CurrentVoltage3", attr_CurrentVoltage3_read, 1, 0, false);
+                    DeviceImpl::push_archive_event("ActivePower1", attr_ActivePower1_read, 1, 0, false);
+                    DeviceImpl::push_archive_event("ActivePower2", attr_ActivePower2_read, 1, 0, false);
+                    DeviceImpl::push_archive_event("ActivePower3", attr_ActivePower3_read, 1, 0, false);
+                    DeviceImpl::push_archive_event("CurrentNeutro", attr_CurrentNeutro_read, 1, 0, false);
+                    DeviceImpl::push_archive_event("JsonTrans", attr_JsonTrans_read, 1, 0, false);
+
+                    i = 0;
+                }
             }
-            
-            json j = { { "Day", *attr_Day_read },
+
+            /*json j = { { "Day", *attr_Day_read },
                        { "Hour", *attr_Hour_read },
                        { "LineVoltage1", *attr_LineVoltage1_read },
                        { "LineVoltage2", *attr_LineVoltage2_read },
@@ -554,8 +603,7 @@ void AmicaLogger::next()
                        { "ActivePower1", *attr_ActivePower1_read },
                        { "ActivePower2", *attr_ActivePower2_read },
                        { "ActivePower3", *attr_ActivePower3_read },
-                       { "CurrentNeutro", *attr_CurrentNeutro_read }
-                    };
+                       { "CurrentNeutro", *attr_CurrentNeutro_read } };
             string jsonStr = j.dump();
             attr_JsonTrans_read[0] = new char[jsonStr.length() + 1];
             strcpy(attr_JsonTrans_read[0], jsonStr.c_str());
@@ -575,7 +623,7 @@ void AmicaLogger::next()
             DeviceImpl::push_archive_event("ActivePower2", attr_ActivePower2_read, 1, 0, false);
             DeviceImpl::push_archive_event("ActivePower3", attr_ActivePower3_read, 1, 0, false);
             DeviceImpl::push_archive_event("CurrentNeutro", attr_CurrentNeutro_read, 1, 0, false);
-            DeviceImpl::push_archive_event("JsonTrans", attr_JsonTrans_read, 1, 0, false);
+            DeviceImpl::push_archive_event("JsonTrans", attr_JsonTrans_read, 1, 0, false);*/
         }
     }
     catch (int e)
@@ -583,8 +631,9 @@ void AmicaLogger::next()
         cout << "An exception occurred. Exception Nr. " << e << '\n';
     }
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::next
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::next
 }
+
 //--------------------------------------------------------
 /**
  *	Method      : AmicaLogger::add_dynamic_commands()
@@ -594,11 +643,11 @@ void AmicaLogger::next()
 //--------------------------------------------------------
 void AmicaLogger::add_dynamic_commands()
 {
-	/*----- PROTECTED REGION ID(AmicaLogger::add_dynamic_commands) ENABLED START -----*/
+    /*----- PROTECTED REGION ID(AmicaLogger::add_dynamic_commands) ENABLED START -----*/
 
     //	Add your own code to create and add dynamic commands if any
 
-    /*----- PROTECTED REGION END -----*/	//	AmicaLogger::add_dynamic_commands
+    /*----- PROTECTED REGION END -----*/ //	AmicaLogger::add_dynamic_commands
 }
 
 /*----- PROTECTED REGION ID(AmicaLogger::namespace_ending) ENABLED START -----*/
@@ -620,5 +669,5 @@ void AmicaLogger::add_dynamic_commands()
 //     attr.set_value(attr_LineVoltage3_read);
 // }
 
-/*----- PROTECTED REGION END -----*/	//	AmicaLogger::namespace_ending
+/*----- PROTECTED REGION END -----*/ //	AmicaLogger::namespace_ending
 } //	namespace
