@@ -175,7 +175,7 @@ void AmicaLogger::init_device()
     attr_LineVoltage1_read = new Tango::DevDouble[1];
     attr_LineVoltage2_read = new Tango::DevDouble[1];
     attr_LineVoltage3_read = new Tango::DevDouble[1];
-    attr_CurrentNeutro_read = new Tango::DevDouble[1];
+    attr_CurrentNeutro_read  = new Tango::DevDouble[1];
     attr_JsonTrans_read = new Tango::DevString[1];
     /*----- PROTECTED REGION ID(AmicaLogger::init_device) ENABLED START -----*/
     //	Initialize device
