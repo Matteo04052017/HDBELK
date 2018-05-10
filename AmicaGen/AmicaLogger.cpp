@@ -175,7 +175,7 @@ void AmicaLogger::init_device()
     attr_LineVoltage1_read = new Tango::DevDouble[1];
     attr_LineVoltage2_read = new Tango::DevDouble[1];
     attr_LineVoltage3_read = new Tango::DevDouble[1];
-    attr_CurrentNeutro_read  = new Tango::DevDouble[1];
+    attr_CurrentNeutro_read = new Tango::DevDouble[1];
     attr_JsonTrans_read = new Tango::DevString[1];
     /*----- PROTECTED REGION ID(AmicaLogger::init_device) ENABLED START -----*/
     //	Initialize device
@@ -556,7 +556,8 @@ void AmicaLogger::next()
                 if (i > 13) {
 
                     json j = { { "Day", *attr_Day_read },
-                               { "Hour", *attr_Hour_read },
+                               { "Hour", (*attr_Hour_read+ *attr_Day_read)},
+                               { "DayHour", *attr_Hour_read },
                                { "LineVoltage1", *attr_LineVoltage1_read },
                                { "LineVoltage2", *attr_LineVoltage2_read },
                                { "LineVoltage3", *attr_LineVoltage3_read },
